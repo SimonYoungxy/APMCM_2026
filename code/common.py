@@ -1,9 +1,13 @@
-"""Shared paths, constants and plotting style for the APMCM 2026 Problem C pipeline."""
+"""Shared paths, constants and plotting style for the APMCM 2026 Problem C pipeline.
+
+Paths are resolved relative to this file so the repository can be cloned anywhere.
+The raw data default to ./data inside the repository; set APMCM_DATA to override.
+"""
 import os
 import numpy as np
 
-BASE = r"D:\Grade 2\数学建模\apmcm2026-problem-c"
-DATA = r"D:\Grade 2\数学建模\apmcm2026-problem-c\data"
+BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATA = os.environ.get("APMCM_DATA", os.path.join(BASE, "data"))
 FIG = os.path.join(BASE, "figures")
 RES = os.path.join(BASE, "results")
 EDA = os.path.join(BASE, "eda")
