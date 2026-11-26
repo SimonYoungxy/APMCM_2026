@@ -1,0 +1,19 @@
+\begin{table}[!ht]
+\centering
+\setlength{\tabcolsep}{4pt}
+\caption{Three-class classification of call type (5-fold stratified cross-validation,
+$n=108$; majority-class accuracy 0.407). Feature set C is reported only as a leakage
+audit and is never used as a substantive classifier. Per-class F1 for the best model
+(set B, random forest): flat 0.723, mod 0.667, tv 0.462.}
+\label{tab:clf}
+\scriptsize
+\begin{tabular}{lcccc}
+\toprule
+Feature set & RF accuracy & LDA accuracy & SVM accuracy & RF macro-F1\\
+\midrule
+A: six raw measures & 0.481 & 0.435 & 0.472 & 0.469\\
+B: three engineered measures & 0.639 & 0.491 & 0.491 & 0.617\\
+C: A $+$ structural flags (leakage audit) & 0.944 & 0.630 & 0.935 & 0.952\\
+\bottomrule
+\end{tabular}
+\end{table}

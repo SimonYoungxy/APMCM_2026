@@ -1,0 +1,27 @@
+\begin{table}[!ht]
+\centering
+\caption{Predicted head-raising latency (s) from the Weibull accelerated-failure-time
+model, for the median group size of 8 penguins. The observation window of the field
+trials is 10 s, so a condition is labelled ``no response'' when the predicted
+probability of responding within that window falls below 0.5.}
+\label{tab:latency}
+\footnotesize
+\begin{tabular}{lcccc}
+\toprule
+Call type & Distance (m) & Predicted median latency & $P(\text{response}\le 10\,\text{s})$ & Verdict\\
+\midrule
+control & 50 & 162.1 & 0.116 & no response\\
+control & 100 & 338.1 & 0.076 & no response\\
+control & 150 & 519.8 & 0.058 & no response\\
+flat & 50 & 8.5 & 0.535 & response\\
+flat & 100 & 17.8 & 0.385 & no response\\
+flat & 150 & 27.3 & 0.311 & no response\\
+mod & 50 & 7.4 & 0.566 & response\\
+mod & 100 & 15.5 & 0.411 & no response\\
+mod & 150 & 23.8 & 0.333 & no response\\
+tv & 50 & 15.9 & 0.406 & no response\\
+tv & 100 & 33.1 & 0.281 & no response\\
+tv & 150 & 50.9 & 0.224 & no response\\
+\bottomrule
+\end{tabular}
+\end{table}

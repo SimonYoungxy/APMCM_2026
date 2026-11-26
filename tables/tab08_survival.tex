@@ -1,0 +1,20 @@
+\begin{table}[!ht]
+\centering
+\setlength{\tabcolsep}{4pt}
+\caption{Latency models with right-censoring. Each Cox model uses at most two
+covariates, so the events-per-variable ratio stays above 10. The last column reports
+scaled Schoenfeld residual $p$ values. $^{a}$All 23 approach events occurred in
+natural-call trials (none in 139 control trials), so the stimulus coefficient is not
+estimable; the log-rank test remains valid.}
+\label{tab:surv}
+\scriptsize
+\begin{tabular}{lcccccc}
+\toprule
+Behaviour & Events & Log-rank $p$ & HR (call) & HR ($\log_{10}d$) & C-index & PH test $p$\\
+\midrule
+HeadsUp & 68 & 7.4e-9 & 4.90 [2.68, 8.98] & 0.25 [0.12, 0.49] & 0.726 & call=0.065, $\log_{10}d$=0.478\\
+Vocal & 81 & 1.7e-21 & 21.66 [8.75, 53.61] & 1.18 [0.49, 2.80] & 0.756 & call=0.774, $\log_{10}d$=0.006\\
+Approach & 23 & 5.7e-7 & n.e.$^{a}$ & 0.33 [0.11, 0.99] & 0.676 & $\log_{10}d$=0.231\\
+\bottomrule
+\end{tabular}
+\end{table}

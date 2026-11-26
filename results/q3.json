@@ -1,0 +1,857 @@
+{
+  "n": 278,
+  "events": {
+    "ResponseYesNo": 108,
+    "HeadsUpYesNo": 68,
+    "VocalYesNo": 81,
+    "ApproachYesNo": 23
+  },
+  "npenguins_median": 8.0,
+  "distance_bins": {
+    "<=50": 82,
+    "50-100": 160,
+    ">100": 36
+  },
+  "overall_response": {
+    "table": {
+      "0": {
+        "call": 49,
+        "control": 121
+      },
+      "1": {
+        "call": 90,
+        "control": 18
+      }
+    },
+    "call_rate": 0.6475,
+    "control_rate": 0.1295,
+    "chi2": 78.494,
+    "df": 1,
+    "p_chi2": 8.023680873749716e-19,
+    "cramers_v": 0.5314,
+    "fisher_or": 0.081,
+    "p_fisher": 1.9192951034665862e-19,
+    "risk_difference": 0.518
+  },
+  "logit_response_all": {
+    "tag": "Response ~ Type + Context + log10(Distance) + Npenguins",
+    "n": 278,
+    "events": 108,
+    "n_covariates": 5,
+    "n_params": 6,
+    "epv": 21.6,
+    "aic": 268.17,
+    "pseudo_r2": 0.3104,
+    "coef": {
+      "const": {
+        "coef": 4.1509,
+        "OR": 63.488,
+        "CI95": [
+          6.42,
+          627.882
+        ],
+        "p": 0.0004
+      },
+      "log_dist": {
+        "coef": -1.5615,
+        "OR": 0.21,
+        "CI95": [
+          0.069,
+          0.642
+        ],
+        "p": 0.0062
+      },
+      "Npenguins": {
+        "coef": -0.0613,
+        "OR": 0.941,
+        "CI95": [
+          0.903,
+          0.979
+        ],
+        "p": 0.0031
+      },
+      "Type_control": {
+        "coef": -2.8504,
+        "OR": 0.058,
+        "CI95": [
+          0.029,
+          0.115
+        ],
+        "p": 0.0
+      },
+      "Context_commuting": {
+        "coef": -0.2285,
+        "OR": 0.796,
+        "CI95": [
+          0.374,
+          1.695
+        ],
+        "p": 0.5537
+      },
+      "Context_searching": {
+        "coef": 0.6306,
+        "OR": 1.879,
+        "CI95": [
+          0.757,
+          4.662
+        ],
+        "p": 0.1738
+      }
+    },
+    "deviance": 256.167,
+    "llf": -128.084
+  },
+  "logit_response_callonly": {
+    "tag": "Response ~ CallType + Context + log10(Distance) + Npenguins (call only)",
+    "n": 139,
+    "events": 90,
+    "n_covariates": 6,
+    "n_params": 7,
+    "epv": 15.0,
+    "aic": 158.36,
+    "pseudo_r2": 0.1999,
+    "coef": {
+      "const": {
+        "coef": 3.0833,
+        "OR": 21.83,
+        "CI95": [
+          0.983,
+          484.96
+        ],
+        "p": 0.0513
+      },
+      "log_dist": {
+        "coef": -1.3185,
+        "OR": 0.268,
+        "CI95": [
+          0.056,
+          1.272
+        ],
+        "p": 0.0975
+      },
+      "Npenguins": {
+        "coef": -0.0639,
+        "OR": 0.938,
+        "CI95": [
+          0.895,
+          0.983
+        ],
+        "p": 0.0075
+      },
+      "CallType_mod": {
+        "coef": 0.2068,
+        "OR": 1.23,
+        "CI95": [
+          0.433,
+          3.489
+        ],
+        "p": 0.6975
+      },
+      "CallType_tv": {
+        "coef": 0.4635,
+        "OR": 1.59,
+        "CI95": [
+          0.635,
+          3.981
+        ],
+        "p": 0.3223
+      },
+      "Context_commuting": {
+        "coef": 0.1493,
+        "OR": 1.161,
+        "CI95": [
+          0.483,
+          2.791
+        ],
+        "p": 0.7387
+      },
+      "Context_searching": {
+        "coef": 2.2136,
+        "OR": 9.148,
+        "CI95": [
+          1.77,
+          47.285
+        ],
+        "p": 0.0083
+      }
+    },
+    "deviance": 144.36,
+    "llf": -72.18
+  },
+  "behaviour_models": {
+    "HeadsUp": {
+      "tag": "HeadsUp ~ call + log_dist + Npenguins + ctx_commuting + ctx_searching",
+      "n": 278,
+      "events": 68,
+      "n_covariates": 5,
+      "n_params": 6,
+      "epv": 13.6,
+      "aic": 261.23,
+      "pseudo_r2": 0.1943,
+      "coef": {
+        "const": {
+          "coef": 1.863,
+          "OR": 6.443,
+          "CI95": [
+            0.77,
+            53.899
+          ],
+          "p": 0.0856
+        },
+        "call": {
+          "coef": 1.9777,
+          "OR": 7.226,
+          "CI95": [
+            3.574,
+            14.61
+          ],
+          "p": 0.0
+        },
+        "log_dist": {
+          "coef": -2.0276,
+          "OR": 0.132,
+          "CI95": [
+            0.045,
+            0.389
+          ],
+          "p": 0.0002
+        },
+        "Npenguins": {
+          "coef": -0.0639,
+          "OR": 0.938,
+          "CI95": [
+            0.895,
+            0.983
+          ],
+          "p": 0.0072
+        },
+        "ctx_commuting": {
+          "coef": 0.1,
+          "OR": 1.105,
+          "CI95": [
+            0.498,
+            2.454
+          ],
+          "p": 0.806
+        },
+        "ctx_searching": {
+          "coef": 0.0286,
+          "OR": 1.029,
+          "CI95": [
+            0.425,
+            2.494
+          ],
+          "p": 0.9495
+        }
+      },
+      "deviance": 249.231,
+      "llf": -124.616,
+      "covariates": [
+        "call",
+        "log_dist",
+        "Npenguins",
+        "ctx_commuting",
+        "ctx_searching"
+      ],
+      "budget": 6,
+      "stimulus_separation": false
+    },
+    "Vocal": {
+      "tag": "Vocal ~ call + log_dist + Npenguins + ctx_commuting + ctx_searching",
+      "n": 278,
+      "events": 81,
+      "n_covariates": 5,
+      "n_params": 6,
+      "epv": 16.2,
+      "aic": 219.6,
+      "pseudo_r2": 0.3812,
+      "coef": {
+        "const": {
+          "coef": -3.8744,
+          "OR": 0.021,
+          "CI95": [
+            0.001,
+            0.311
+          ],
+          "p": 0.005
+        },
+        "call": {
+          "coef": 3.9033,
+          "OR": 49.567,
+          "CI95": [
+            17.499,
+            140.405
+          ],
+          "p": 0.0
+        },
+        "log_dist": {
+          "coef": 0.3619,
+          "OR": 1.436,
+          "CI95": [
+            0.411,
+            5.018
+          ],
+          "p": 0.5708
+        },
+        "Npenguins": {
+          "coef": -0.0567,
+          "OR": 0.945,
+          "CI95": [
+            0.903,
+            0.988
+          ],
+          "p": 0.0134
+        },
+        "ctx_commuting": {
+          "coef": -0.2252,
+          "OR": 0.798,
+          "CI95": [
+            0.349,
+            1.824
+          ],
+          "p": 0.5932
+        },
+        "ctx_searching": {
+          "coef": 0.9392,
+          "OR": 2.558,
+          "CI95": [
+            0.918,
+            7.127
+          ],
+          "p": 0.0724
+        }
+      },
+      "deviance": 207.599,
+      "llf": -103.8,
+      "covariates": [
+        "call",
+        "log_dist",
+        "Npenguins",
+        "ctx_commuting",
+        "ctx_searching"
+      ],
+      "budget": 8,
+      "stimulus_separation": false
+    },
+    "Approach": {
+      "tag": "Approach ~ log_dist",
+      "n": 278,
+      "events": 23,
+      "n_covariates": 1,
+      "n_params": 2,
+      "epv": 23.0,
+      "aic": 159.45,
+      "pseudo_r2": 0.0204,
+      "coef": {
+        "const": {
+          "coef": -0.243,
+          "OR": 0.784,
+          "CI95": [
+            0.086,
+            7.172
+          ],
+          "p": 0.8296
+        },
+        "log_dist": {
+          "coef": -1.2089,
+          "OR": 0.299,
+          "CI95": [
+            0.086,
+            1.038
+          ],
+          "p": 0.0572
+        }
+      },
+      "deviance": 155.447,
+      "llf": -77.724,
+      "covariates": [
+        "log_dist"
+      ],
+      "budget": 2,
+      "stimulus_separation": true
+    }
+  },
+  "behaviour_separation": {
+    "HeadsUp": {
+      "control_events": 13,
+      "call_events": 55,
+      "complete_separation": false
+    },
+    "Vocal": {
+      "control_events": 5,
+      "call_events": 76,
+      "complete_separation": false
+    },
+    "Approach": {
+      "control_events": 0,
+      "call_events": 23,
+      "complete_separation": true
+    }
+  },
+  "approach_single_factor": {
+    "Type": {
+      "table": {
+        "0": {
+          "call": 116,
+          "control": 139
+        },
+        "1": {
+          "call": 23,
+          "control": 0
+        }
+      },
+      "chi2": 25.075,
+      "p": 5.515718016178044e-07
+    },
+    "dist_bin": {
+      "table": {
+        "0": {
+          "<=50 m": 67,
+          "50-100 m": 154,
+          ">100 m": 34
+        },
+        "1": {
+          "<=50 m": 15,
+          "50-100 m": 6,
+          ">100 m": 2
+        }
+      },
+      "chi2": 15.511,
+      "p": 0.00042831597372046924
+    },
+    "CallType": {
+      "table": {
+        "0": {
+          "control": 139,
+          "flat": 44,
+          "mod": 25,
+          "tv": 47
+        },
+        "1": {
+          "control": 0,
+          "flat": 4,
+          "mod": 8,
+          "tv": 11
+        }
+      },
+      "chi2": 32.364,
+      "p": 4.386312451087037e-07
+    }
+  },
+  "multinomial_nbehaviour": {
+    "aic": 473.172,
+    "llf": -215.586,
+    "pseudo_r2": 0.2564,
+    "lrt_vs_null_p": 1.3321924887384446e-22,
+    "n_params": 18,
+    "coef": {
+      "const": [
+        0.7315,
+        0.7208,
+        0.8725
+      ],
+      "control": [
+        -1.9985,
+        -28.3413,
+        -27.5723
+      ],
+      "commuting": [
+        -0.3121,
+        0.032,
+        -0.1753
+      ],
+      "searching": [
+        0.4214,
+        0.6175,
+        0.5847
+      ],
+      "50-100 m": [
+        -0.5479,
+        -0.5455,
+        -1.825
+      ],
+      ">100 m": [
+        0.2136,
+        -1.213,
+        -1.6725
+      ],
+      "Npenguins": [
+        -0.0479,
+        -0.0642,
+        -0.1258
+      ]
+    },
+    "p": {
+      "const": [
+        0.1876,
+        0.2877,
+        0.3286
+      ],
+      "control": [
+        0.0,
+        0.9998,
+        0.9998
+      ],
+      "commuting": [
+        0.4659,
+        0.9537,
+        0.8467
+      ],
+      "searching": [
+        0.3975,
+        0.3556,
+        0.5092
+      ],
+      "50-100 m": [
+        0.1649,
+        0.2631,
+        0.0101
+      ],
+      ">100 m": [
+        0.6839,
+        0.1833,
+        0.1588
+      ],
+      "Npenguins": [
+        0.0405,
+        0.0312,
+        0.0438
+      ]
+    },
+    "predicted_shares_call_vs_control": {
+      "call": [
+        0.3525,
+        0.2878,
+        0.259,
+        0.1007
+      ],
+      "control": [
+        0.8705,
+        0.1295,
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "ordinal_nbehaviour": {
+    "params": {
+      "control": -2.8585,
+      "commuting": -0.203,
+      "searching": 0.1971,
+      "50-100 m": -0.7594,
+      ">100 m": -0.6887,
+      "Npenguins": -0.0629,
+      "0/1": -1.9861,
+      "1/2": 0.4451,
+      "2/3": 0.5269
+    },
+    "pvalues": {
+      "control": 0.0,
+      "commuting": 0.5605,
+      "searching": 0.6172,
+      "50-100 m": 0.0125,
+      ">100 m": 0.1189,
+      "Npenguins": 0.0013,
+      "0/1": 0.0,
+      "1/2": 0.0002,
+      "2/3": 0.0009
+    },
+    "aic": 472.308,
+    "llf": -227.154,
+    "po_lr_stat": 23.136,
+    "po_df": 12,
+    "po_p": 0.0266,
+    "mnlogit_aic": 473.172,
+    "assumption_met": false
+  },
+  "combination_counts": {
+    "('call', 0, 0, 0)": 49,
+    "('call', 0, 0, 1)": 1,
+    "('call', 0, 1, 0)": 29,
+    "('call', 0, 1, 1)": 5,
+    "('call', 1, 0, 0)": 10,
+    "('call', 1, 0, 1)": 3,
+    "('call', 1, 1, 0)": 28,
+    "('call', 1, 1, 1)": 14,
+    "('control', 0, 0, 0)": 121,
+    "('control', 0, 1, 0)": 5,
+    "('control', 1, 0, 0)": 13
+  },
+  "nbehaviour_distribution": {
+    "call": {
+      "0": 49,
+      "1": 40,
+      "2": 36,
+      "3": 14
+    },
+    "control": {
+      "0": 121,
+      "1": 18
+    }
+  },
+  "survival": {
+    "HeadsUp": {
+      "n_events": 68,
+      "censored": 210,
+      "dropped_flag_without_latency": 0,
+      "censor_time": 10.0,
+      "logrank_p": 7.3607936380051574e-09,
+      "logrank_stat": 33.437,
+      "median_latency_call": 2.0,
+      "median_latency_control": 1.0,
+      "cox": {
+        "n": 278,
+        "events": 68,
+        "n_covariates": 2,
+        "epv": 34.0,
+        "covariates": [
+          "call",
+          "log_dist"
+        ],
+        "stimulus_separation": false,
+        "concordance": 0.726,
+        "log_likelihood": -349.847,
+        "hazard_ratios": {
+          "call": {
+            "HR": 4.904,
+            "CI95": [
+              2.678,
+              8.981
+            ],
+            "p": 0.0
+          },
+          "log_dist": {
+            "HR": 0.247,
+            "CI95": [
+              0.124,
+              0.492
+            ],
+            "p": 0.0001
+          }
+        },
+        "ph_test": {
+          "call": 0.0648,
+          "log_dist": 0.478
+        }
+      }
+    },
+    "Vocal": {
+      "n_events": 81,
+      "censored": 197,
+      "dropped_flag_without_latency": 0,
+      "censor_time": 47.8,
+      "logrank_p": 1.6720656994115984e-21,
+      "logrank_stat": 90.7,
+      "median_latency_call": 2.9,
+      "median_latency_control": 4.8,
+      "cox": {
+        "n": 278,
+        "events": 81,
+        "n_covariates": 2,
+        "epv": 40.5,
+        "covariates": [
+          "call",
+          "log_dist"
+        ],
+        "stimulus_separation": false,
+        "concordance": 0.756,
+        "log_likelihood": -392.236,
+        "hazard_ratios": {
+          "call": {
+            "HR": 21.659,
+            "CI95": [
+              8.75,
+              53.611
+            ],
+            "p": 0.0
+          },
+          "log_dist": {
+            "HR": 1.177,
+            "CI95": [
+              0.495,
+              2.798
+            ],
+            "p": 0.7126
+          }
+        },
+        "ph_test": {
+          "call": 0.7743,
+          "log_dist": 0.0065
+        }
+      }
+    },
+    "Approach": {
+      "n_events": 23,
+      "censored": 255,
+      "dropped_flag_without_latency": 0,
+      "censor_time": 34.0,
+      "logrank_p": 5.662588164358078e-07,
+      "logrank_stat": 25.024,
+      "median_latency_call": 8.0,
+      "median_latency_control": null,
+      "cox": {
+        "n": 278,
+        "events": 23,
+        "n_covariates": 1,
+        "epv": 23.0,
+        "covariates": [
+          "log_dist"
+        ],
+        "stimulus_separation": true,
+        "concordance": 0.676,
+        "log_likelihood": -126.875,
+        "hazard_ratios": {
+          "log_dist": {
+            "HR": 0.329,
+            "CI95": [
+              0.109,
+              0.99
+            ],
+            "p": 0.048
+          }
+        },
+        "ph_test": {
+          "log_dist": 0.2308
+        }
+      }
+    }
+  },
+  "aft_heads_up": {
+    "n_events": 68,
+    "n_covariates": 4,
+    "epv": 17.0,
+    "median_survival_time": 266.85,
+    "summary": {
+      "('lambda_', 'Intercept')": {
+        "coef": 0.8096,
+        "p": 0.4717
+      },
+      "('lambda_', 'CallType[T.flat]')": {
+        "coef": -2.9462,
+        "p": 0.0
+      },
+      "('lambda_', 'CallType[T.mod]')": {
+        "coef": -3.0851,
+        "p": 0.0
+      },
+      "('lambda_', 'CallType[T.tv]')": {
+        "coef": -2.3231,
+        "p": 0.0002
+      },
+      "('lambda_', 'log_dist')": {
+        "coef": 2.4425,
+        "p": 0.0
+      },
+      "('lambda_', 'Npenguins')": {
+        "coef": 0.0901,
+        "p": 0.0012
+      },
+      "('rho_', 'Intercept')": {
+        "coef": -0.4802,
+        "p": 0.0
+      }
+    }
+  },
+  "predicted_latency_table": [
+    {
+      "CallType": "control",
+      "Distance": 50,
+      "Npenguins": 8.0,
+      "pred_median_latency_s": 162.1,
+      "pred_response_prob_within_10s": 0.116,
+      "call": "no response"
+    },
+    {
+      "CallType": "control",
+      "Distance": 100,
+      "Npenguins": 8.0,
+      "pred_median_latency_s": 338.1,
+      "pred_response_prob_within_10s": 0.076,
+      "call": "no response"
+    },
+    {
+      "CallType": "control",
+      "Distance": 150,
+      "Npenguins": 8.0,
+      "pred_median_latency_s": 519.8,
+      "pred_response_prob_within_10s": 0.058,
+      "call": "no response"
+    },
+    {
+      "CallType": "flat",
+      "Distance": 50,
+      "Npenguins": 8.0,
+      "pred_median_latency_s": 8.5,
+      "pred_response_prob_within_10s": 0.535,
+      "call": "response"
+    },
+    {
+      "CallType": "flat",
+      "Distance": 100,
+      "Npenguins": 8.0,
+      "pred_median_latency_s": 17.8,
+      "pred_response_prob_within_10s": 0.385,
+      "call": "no response"
+    },
+    {
+      "CallType": "flat",
+      "Distance": 150,
+      "Npenguins": 8.0,
+      "pred_median_latency_s": 27.3,
+      "pred_response_prob_within_10s": 0.311,
+      "call": "no response"
+    },
+    {
+      "CallType": "mod",
+      "Distance": 50,
+      "Npenguins": 8.0,
+      "pred_median_latency_s": 7.4,
+      "pred_response_prob_within_10s": 0.566,
+      "call": "response"
+    },
+    {
+      "CallType": "mod",
+      "Distance": 100,
+      "Npenguins": 8.0,
+      "pred_median_latency_s": 15.5,
+      "pred_response_prob_within_10s": 0.411,
+      "call": "no response"
+    },
+    {
+      "CallType": "mod",
+      "Distance": 150,
+      "Npenguins": 8.0,
+      "pred_median_latency_s": 23.8,
+      "pred_response_prob_within_10s": 0.333,
+      "call": "no response"
+    },
+    {
+      "CallType": "tv",
+      "Distance": 50,
+      "Npenguins": 8.0,
+      "pred_median_latency_s": 15.9,
+      "pred_response_prob_within_10s": 0.406,
+      "call": "no response"
+    },
+    {
+      "CallType": "tv",
+      "Distance": 100,
+      "Npenguins": 8.0,
+      "pred_median_latency_s": 33.1,
+      "pred_response_prob_within_10s": 0.281,
+      "call": "no response"
+    },
+    {
+      "CallType": "tv",
+      "Distance": 150,
+      "Npenguins": 8.0,
+      "pred_median_latency_s": 50.9,
+      "pred_response_prob_within_10s": 0.224,
+      "call": "no response"
+    }
+  ],
+  "predicted_latency_meta": {
+    "npenguins": 8.0,
+    "horizon_s": 10.0
+  }
+}

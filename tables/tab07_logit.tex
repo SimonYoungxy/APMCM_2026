@@ -1,0 +1,25 @@
+\begin{table}[!ht]
+\centering
+\caption{Binomial logistic models of the probability of any response. Pseudo-$R^2$
+of the pooled model is 0.310 (AIC 268.2).}
+\label{tab:logit}
+\footnotesize
+\begin{tabular}{lccc}
+\toprule
+Term & Odds ratio & 95\% CI & $p$\\
+\midrule
+\multicolumn{4}{l}{Pooled model (reference: natural call, context: after)}\\
+\quad $\log_{10}$ distance & 0.210 & [0.069, 0.642] & 0.0062\\
+\quad group size & 0.941 & [0.903, 0.979] & 0.0031\\
+\quad stimulus = control & 0.058 & [0.029, 0.115] & 0.0e+00\\
+\quad context: commuting & 0.796 & [0.374, 1.695] & 0.5537\\
+\quad context: searching & 1.879 & [0.757, 4.662] & 0.1738\\
+\midrule
+\multicolumn{4}{l}{Call-only model (reference: flat, context: after)}\\
+\quad call type = mod & 1.230 & [0.433, 3.489] & 0.6975\\
+\quad call type = tv & 1.590 & [0.635, 3.981] & 0.3223\\
+\quad $\log_{10}$ distance & 0.268 & [0.056, 1.272] & 0.0975\\
+\quad group size & 0.938 & [0.895, 0.983] & 0.0075\\
+\bottomrule
+\end{tabular}
+\end{table}

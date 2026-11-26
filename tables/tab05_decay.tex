@@ -1,0 +1,23 @@
+\begin{table}[!ht]
+\centering
+\caption{Candidate decay models for the acoustic fidelity index (weighted least
+squares, AIC selection; $^{*}$ marks the selected model). Parameters: exponential
+$(a,b)$; logistic $(L,k,d_0)$; power $(a,b)$.}
+\label{tab:decay}
+\footnotesize
+\begin{tabular}{llcc}
+\toprule
+Call type & Model & Parameters & AIC\\
+\midrule
+flat & exponential & (0.8634, 0.00625) & -46.89$^{*}$\\
+flat & logistic & (1.5, 0.009836, 24.33) & -43.80\\
+flat & power & (1.266, 0.2206) & -25.75\\
+mod & exponential & (0.8664, 0.003983) & -37.79\\
+mod & logistic & (0.9518, 0.0115, 164.6) & -43.04$^{*}$\\
+mod & power & (1.141, 0.1548) & -25.43\\
+tv & exponential & (0.7965, 0.002876) & -33.08\\
+tv & logistic & (0.7615, 0.01893, 226.1) & -42.94$^{*}$\\
+tv & power & (0.9616, 0.1075) & -25.84\\
+\bottomrule
+\end{tabular}
+\end{table}
