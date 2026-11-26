@@ -22,20 +22,19 @@
 
 \begin{abstract}
 African penguins forage in open coastal water where visual signals fail, so contact
-calls are likely to carry much of the information that keeps groups together. We build a
-statistical chain from the acoustic structure of three sea-surface call types, through
-their degradation with distance and the responses they elicit, to an operational index of
+calls are likely to carry much of the information that keeps groups together. We chain
+acoustic structure, distance degradation and playback responses into an index of
 communication effectiveness.
 
-An audit of the data shows that the two obvious discriminating variables, the presence of
-a second fundamental frequency and the pulse rate, are definitional: the second
-fundamental exists if and only if the call is two-voice, so any classifier using them is
+The two obvious discriminating variables, a second fundamental frequency and the pulse
+rate, are definitional rather than acoustic: the second fundamental exists if and only if
+the call is two-voice, so any classifier using them is
 tautological. Restricted to six genuinely comparable measures a random forest reaches
 $0.481$ cross-validated accuracy against a $0.407$ baseline; three physically
 interpretable engineered measures raise this to $0.639$, and a leakage audit that
 reintroduces the structural flags reaches $0.944$, quantifying how much of the apparent
-separability is definitional. Kruskal--Wallis with Dunn comparisons identifies peak
-frequency and the first fundamental as the only measures that differ significantly.
+separability is definitional. After a Benjamini--Hochberg correction across the six
+measures, only peak frequency and the first fundamental differ significantly.
 
 Combining spectrogram, amplitude-spectrum and envelope correlations into a fidelity index
 (equal loadings of about $0.58$, $96.7\%$ of variance on the first component) and fitting
@@ -46,8 +45,8 @@ $[67,95]$, $[138,206]$ and $[162,438]$ m.
 Natural calls raise the response rate from $12.9\%$ to $64.8\%$ (Fisher exact odds ratio $12.3$).
 Response probability falls with distance and weakly with group size, and a multinomial
 analysis shows that natural calls generate multi-behaviour responses which control sounds
-essentially never produce. Treating non-responses as right-censored, Cox models give
-stimulus hazard ratios of $4.9$ for head raising and $21.7$ for vocalising.
+essentially never produce. With non-responses censored at a surrogate window, Cox hazard
+ratios are $4.9$ for head raising and $21.7$ for vocalising.
 
 The combined communication-effectiveness index has a half-maximum radius of $96$, $158$
 and $203$ m; under a strict $0.7$ signal-recognition threshold the ranges fall to $34$,
@@ -243,12 +242,15 @@ as a second, independent family of tests.
 \input{tables/tab02_descriptive}
 \input{tables/tab03_dunn}
 
-Three measures differ significantly across call types
+Three measures differ at the nominal $5\%$ level across call types
 (Table~\ref{tab:desc}): peak frequency ($H=12.28$, $p=0.0022$, $\varepsilon^2=0.098$),
 the first fundamental ($H=9.14$, $p=0.010$, $\varepsilon^2=0.068$) and the median
-frequency ($H=6.43$, $p=0.040$, $\varepsilon^2=0.042$). Duration, the lower quartile and
-the upper quartile show no detectable difference. The effect sizes are small; even the
-strongest measure explains under $10\%$ of the rank variance. Dunn's comparisons locate
+frequency ($H=6.43$, $p=0.040$, $\varepsilon^2=0.042$). Because six omnibus tests were
+run, we also applied Benjamini--Hochberg across them: peak frequency
+($p_{\mathrm{BH}}=0.013$) and the first fundamental ($p_{\mathrm{BH}}=0.031$) survive,
+whereas the median-frequency effect does not ($p_{\mathrm{BH}}=0.081$). Duration, the
+lower quartile and the upper quartile show no detectable difference. The effect sizes are
+small; even the strongest measure explains under $10\%$ of the rank variance. Dunn's comparisons locate
 the peak-frequency difference entirely between flat calls and the two modulated forms
 ($p=0.0042$ and $p=0.013$, both corrected), while modulated and two-voice calls are
 indistinguishable ($p=0.90$). For the first fundamental the contrast is between flat and
@@ -518,14 +520,19 @@ numerical odds ratio.
 
 Because the three behaviours are not independent, we also model the number of behaviours
 observed in a trial, a count from zero to three. A proportional-odds ordered logit was
-fitted first, but a likelihood-ratio test against the unrestricted multinomial alternative
-rejects the proportional-odds restriction ($\mathrm{LR}=23.14$, $\mathrm{df}=12$,
+fitted first, but a likelihood-ratio test against the unrestricted multinomial
+alternative, used here as an omnibus equivalent of a Brant test, rejects the
+proportional-odds restriction ($\mathrm{LR}=23.14$, $\mathrm{df}=12$,
 $p=0.027$). We therefore report the multinomial model: its AIC ($473.17$) is marginally
 higher than that of the restricted model ($472.31$), but the likelihood gain justifies the
 extra parameters once the proportionality assumption is rejected. Its implied
 distributions are stark: for control stimuli the predicted shares of zero, one, two and
 three behaviours are $0.871$, $0.129$, $0.000$ and $0.000$, whereas for natural calls they
-are $0.353$, $0.288$, $0.259$ and $0.101$. Natural calls do not merely raise the
+are $0.353$, $0.288$, $0.259$ and $0.101$. One caution applies: the control coefficients
+for the two- and three-behaviour categories diverge ($-28.3$ and $-27.6$,
+$p=0.9998$) because no control trial produced more than one behaviour. That is complete
+separation, so the fit is used to describe predicted distributions and its extreme
+coefficients are not read as effect sizes. Natural calls do not merely raise the
 probability of some response; in this sample they also change the shape of the response
 profile, multi-behaviour responses being observed almost exclusively under natural-call
 playbacks. Because the control group contains no approach events, this difference is a
@@ -538,6 +545,24 @@ sample observation rather than an estimated causal effect size.
 by stimulus type.}
 \label{fig:nbeh}
 \end{figure}
+
+\subsection{Response intensity}
+
+Beyond whether a behaviour occurs, the data record how often and for how long.
+Vocalisation count is a zero-inflated count ($193$ of $278$ trials record none), and a
+negative binomial model with stimulus type and log-distance fits it well: natural calls
+multiply the expected count by $13.0$ ($95\%$ CI $[7.3,23.0]$, $p<10^{-3}$) while distance
+is not significant (IRR $2.04$, $[0.81,5.11]$, $p=0.13$). The zero share is $43.9\%$
+under natural calls against $95.0\%$ under controls, so the stimulus acts mainly on
+whether birds call at all rather than on how much they call.
+
+Durations are recorded as zero when the behaviour does not occur and are therefore
+summarised only over trials in which it did. Head raising lasts a median of $22.0$ s
+(IQR $14.0$--$34.5$) under natural calls against $12.0$ s ($11.0$--$18.0$) under
+controls. Approaching lasts a median of $32.0$ s ($26.0$--$60.0$), but all $23$ approach
+events fall in natural-call trials, so no between-stimulus comparison is estimable; we
+report the distribution descriptively rather than fit a model that complete separation
+would render uninterpretable.
 
 \subsection{Response latency as a censored outcome}
 

@@ -77,6 +77,25 @@ for f in FEATS:
              "significant": bool(p < 0.05)}
 res["kruskal"] = kw
 
+# multiplicity across the six omnibus tests (the nominal p values above are
+# per-measure and unadjusted; report both BH-FDR and Bonferroni outcomes)
+from statsmodels.stats.multitest import multipletests
+_p = np.array([kw[f]["p"] for f in FEATS])
+_rej_bh, _padj_bh, _, _ = multipletests(_p, alpha=0.05, method="fdr_bh")
+_rej_bf, _padj_bf, _, _ = multipletests(_p, alpha=0.05, method="bonferroni")
+for i, f in enumerate(FEATS):
+    kw[f]["p_bh"] = round(float(_padj_bh[i]), 4)
+    kw[f]["p_bonferroni"] = round(float(_padj_bf[i]), 4)
+    kw[f]["significant_bh"] = bool(_rej_bh[i])
+    kw[f]["significant_bonferroni"] = bool(_rej_bf[i])
+res["kruskal_multiplicity"] = {
+    "method": "Benjamini-Hochberg over the six omnibus tests",
+    "n_significant_bh": int(_rej_bh.sum()),
+    "n_significant_bonferroni": int(_rej_bf.sum()),
+    "significant_bh_measures": [f for f in FEATS if kw[f]["significant_bh"]],
+    "significant_nominal_measures": [f for f in FEATS if kw[f]["p"] < 0.05],
+}
+
 # ------------------------------------------------------------ Dunn (FDR)
 dunn = {}
 for f in FEATS:

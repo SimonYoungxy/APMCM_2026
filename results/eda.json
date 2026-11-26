@@ -110,7 +110,12 @@
     }
   },
   "leak_F02_is_tv_indicator": true,
-  "leak_PulseRate_absent_for_flat": false,
+  "pulse_rate_missing_rate_by_type": {
+    "flat": 1.0,
+    "mod": 0.15,
+    "tv": 0.1667
+  },
+  "pulse_rate_absent_for_flat": true,
   "d01_rows_with_6_complete_feats": 108,
   "d02_n": 278,
   "d02_type": {

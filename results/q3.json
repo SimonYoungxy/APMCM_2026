@@ -566,6 +566,67 @@
     "mnlogit_aic": 473.172,
     "assumption_met": false
   },
+  "vocal_calls_model": {
+    "model": "negative binomial NB2",
+    "n": 278,
+    "zeros": 193,
+    "zero_share_call": 0.4388,
+    "zero_share_control": 0.9496,
+    "mean_call": 2.129,
+    "mean_control": 0.173,
+    "alpha": 2.6159,
+    "terms": {
+      "call": {
+        "coef": 2.5636,
+        "IRR": 12.982,
+        "CI95": [
+          7.323,
+          23.016
+        ],
+        "p": 0.0
+      },
+      "log_dist": {
+        "coef": 0.7112,
+        "IRR": 2.037,
+        "CI95": [
+          0.811,
+          5.111
+        ],
+        "p": 0.1298
+      }
+    },
+    "aic": 659.76
+  },
+  "duration_descriptives": {
+    "HeadsUpDuration": {
+      "n_events": 68,
+      "by_type": {
+        "call": {
+          "n": 55,
+          "median": 22.0,
+          "q1": 14.0,
+          "q3": 34.5
+        },
+        "control": {
+          "n": 13,
+          "median": 12.0,
+          "q1": 11.0,
+          "q3": 18.0
+        }
+      }
+    },
+    "ApproachDuration": {
+      "n_events": 23,
+      "by_type": {
+        "call": {
+          "n": 23,
+          "median": 32.0,
+          "q1": 26.0,
+          "q3": 60.0
+        }
+      }
+    }
+  },
   "combination_counts": {
     "('call', 0, 0, 0)": 49,
     "('call', 0, 0, 1)": 1,

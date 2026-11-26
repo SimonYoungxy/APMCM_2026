@@ -271,43 +271,81 @@
       "df": 2,
       "p": 0.28322886825431937,
       "epsilon_squared": 0.005,
-      "significant": false
+      "significant": false,
+      "p_bh": 0.4081,
+      "p_bonferroni": 1.0,
+      "significant_bh": false,
+      "significant_bonferroni": false
     },
     "F01": {
       "H": 9.144,
       "df": 2,
       "p": 0.0103353713116958,
       "epsilon_squared": 0.068,
-      "significant": true
+      "significant": true,
+      "p_bh": 0.031,
+      "p_bonferroni": 0.062,
+      "significant_bh": true,
+      "significant_bonferroni": false
     },
     "Fpeak": {
       "H": 12.276,
       "df": 2,
       "p": 0.0021595261119431745,
       "epsilon_squared": 0.0979,
-      "significant": true
+      "significant": true,
+      "p_bh": 0.013,
+      "p_bonferroni": 0.013,
+      "significant_bh": true,
+      "significant_bonferroni": true
     },
     "Q25": {
       "H": 2.157,
       "df": 2,
       "p": 0.3400435848287139,
       "epsilon_squared": 0.0015,
-      "significant": false
+      "significant": false,
+      "p_bh": 0.4081,
+      "p_bonferroni": 1.0,
+      "significant_bh": false,
+      "significant_bonferroni": false
     },
     "Q50": {
       "H": 6.425,
       "df": 2,
       "p": 0.040247531352827805,
       "epsilon_squared": 0.0421,
-      "significant": true
+      "significant": true,
+      "p_bh": 0.0805,
+      "p_bonferroni": 0.2415,
+      "significant_bh": false,
+      "significant_bonferroni": false
     },
     "Q75": {
       "H": 0.52,
       "df": 2,
       "p": 0.771175028404057,
       "epsilon_squared": 0.0,
-      "significant": false
+      "significant": false,
+      "p_bh": 0.7712,
+      "p_bonferroni": 1.0,
+      "significant_bh": false,
+      "significant_bonferroni": false
     }
+  },
+  "kruskal_multiplicity": {
+    "method": "Benjamini-Hochberg over the six omnibus tests",
+    "n_significant_bh": 2,
+    "n_significant_bonferroni": 1,
+    "significant_bh_measures": [
+      "F01",
+      "Fpeak"
+    ],
+    "significant_nominal_measures": [
+      "F01",
+      "Fpeak",
+      "Q50"
+    ]
   },
   "dunn_fdr": {
     "Duration": {

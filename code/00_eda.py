@@ -30,11 +30,16 @@ out["d01_missing_by_type"] = miss_by_type
 leak_f02 = bool(
     ((d1.F02.notna()) == (d1.CallType == "tv")).all()
 )
-leak_pr = bool(
-    ((d1.PulseRate.notna()) == (d1.CallType != "flat")).all()
-)
+# PulseRate is not a perfect indicator: it is absent for every flat call but also
+# missing for a few modulated and two-voice calls, so record the per-type rate
+# instead of a single boolean with a misleading name.
+pr_missing_rate = {
+    ct: round(1.0 - float(d1.loc[d1.CallType == ct, "PulseRate"].notna().mean()), 4)
+    for ct in CALL_TYPES
+}
 out["leak_F02_is_tv_indicator"] = leak_f02
-out["leak_PulseRate_absent_for_flat"] = leak_pr
+out["pulse_rate_missing_rate_by_type"] = pr_missing_rate
+out["pulse_rate_absent_for_flat"] = pr_missing_rate["flat"] == 1.0
 
 complete_rows = int(d1[FEATS].notna().all(axis=1).sum())
 out["d01_rows_with_6_complete_feats"] = complete_rows
@@ -44,7 +49,8 @@ lines += [
     f"- rows: {len(d1)}, CallType counts: {out['d01_by_type']}",
     f"- rows with all 6 complete features: {complete_rows}",
     f"- F02 present iff CallType == tv: **{leak_f02}** (structural leakage)",
-    f"- PulseRate absent iff CallType == flat: **{leak_pr}**",
+    "- PulseRate missing rate by call type: "
+    + ", ".join(f"{ct} {100*v:.1f}%" for ct, v in pr_missing_rate.items()),
     "",
     "| feature | flat present | mod present | tv present |",
     "|---|---|---|---|",

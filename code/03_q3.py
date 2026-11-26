@@ -195,6 +195,44 @@ for tp in ["call", "control"]:
 res["multinomial_nbehaviour"] = mn_res
 res["ordinal_nbehaviour"] = po
 
+# ------------------------------------------------ 3b. response intensity
+# vocalisation count: a zero-inflated count, modelled with NB2 and two covariates
+Xd = pd.DataFrame({"const": 1.0,
+                   "call": (d.Type == "call").astype(float).to_numpy(),
+                   "log_dist": d["log_dist"].to_numpy()})
+nb = sm.NegativeBinomial(d["VocalNcalls"].astype(float), Xd).fit(disp=False, maxiter=500)
+ci = nb.conf_int()
+res["vocal_calls_model"] = {
+    "model": "negative binomial NB2",
+    "n": int(len(d)),
+    "zeros": int((d.VocalNcalls == 0).sum()),
+    "zero_share_call": round(float((d.loc[d.Type == "call", "VocalNcalls"] == 0).mean()), 4),
+    "zero_share_control": round(float((d.loc[d.Type == "control", "VocalNcalls"] == 0).mean()), 4),
+    "mean_call": round(float(d.loc[d.Type == "call", "VocalNcalls"].mean()), 3),
+    "mean_control": round(float(d.loc[d.Type == "control", "VocalNcalls"].mean()), 3),
+    "alpha": round(float(nb.params.iloc[-1]), 4),
+    "terms": {str(k): {"coef": round(float(nb.params[k]), 4),
+                       "IRR": round(float(np.exp(nb.params[k])), 3),
+                       "CI95": [round(float(np.exp(ci.loc[k, 0])), 3),
+                                round(float(np.exp(ci.loc[k, 1])), 3)],
+                       "p": round(float(nb.pvalues[k]), 4)}
+              for k in ["call", "log_dist"]},
+    "aic": round(float(nb.aic), 2),
+}
+
+# durations are recorded as zero when the behaviour did not occur, so they are
+# summarised only among trials in which the behaviour was observed
+dur_desc = {}
+for c in ["HeadsUpDuration", "ApproachDuration"]:
+    ev = d[d[c] > 0]
+    dur_desc[c] = {"n_events": int(len(ev)),
+                   "by_type": {t: {"n": int(len(g)),
+                                   "median": round(float(g[c].median()), 1),
+                                   "q1": round(float(g[c].quantile(.25)), 1),
+                                   "q3": round(float(g[c].quantile(.75)), 1)}
+                               for t, g in ev.groupby("Type")}}
+res["duration_descriptives"] = dur_desc
+
 # distribution of the eight combinations
 combo = d.groupby(["Type", "HeadsUpYesNo", "VocalYesNo", "ApproachYesNo"]).size()
 res["combination_counts"] = {str(k): int(v) for k, v in combo.items()}

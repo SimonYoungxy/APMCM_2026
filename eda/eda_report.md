@@ -5,7 +5,7 @@
 - rows: 108, CallType counts: {'flat': 44, 'mod': 40, 'tv': 24}
 - rows with all 6 complete features: 108
 - F02 present iff CallType == tv: **True** (structural leakage)
-- PulseRate absent iff CallType == flat: **False**
+- PulseRate missing rate by call type: flat 100.0%, mod 15.0%, tv 16.7%
 
 | feature | flat present | mod present | tv present |
 |---|---|---|---|
