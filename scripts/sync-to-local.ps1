@@ -2,18 +2,26 @@
 # Sync this repository into the local submission folder.
 # The repository is the single source of truth; the target folder is generated output.
 #
+# NOTE: keep this file pure ASCII. Windows PowerShell 5.1 reads script files as ANSI
+# when they have no UTF-8 BOM, which corrupts any non-ASCII literal (including paths).
+# The default target is therefore derived from the repository location, not hard-coded.
+#
 # Usage:
 #   powershell -ExecutionPolicy Bypass -File scripts/sync-to-local.ps1
-#   powershell -ExecutionPolicy Bypass -File scripts/sync-to-local.ps1 -Target "D:\path\to\APMCM2026_C"
 #   powershell -ExecutionPolicy Bypass -File scripts/sync-to-local.ps1 -Clean
+#   powershell -ExecutionPolicy Bypass -File scripts/sync-to-local.ps1 -Target "D:\some\dir"
 
 param(
-    [string]$Target = "D:\Grade 2\数学建模\APMCM2026_C",
+    [string]$Target,
     [switch]$Clean
 )
 
 $ErrorActionPreference = "Stop"
+
 $Repo = Split-Path -Parent $PSScriptRoot
+if (-not $Target) {
+    $Target = Join-Path (Split-Path -Parent $Repo) "APMCM2026_C"
+}
 
 if (-not (Test-Path -LiteralPath $Target)) {
     New-Item -ItemType Directory -Path $Target -Force | Out-Null
@@ -26,7 +34,7 @@ function Copy-One($src, $dstDir, $dstName) {
     if (-not (Test-Path -LiteralPath $dstDir)) {
         New-Item -ItemType Directory -Path $dstDir -Force | Out-Null
     }
-    if ($dstName -eq $null) {
+    if ($null -eq $dstName) {
         Copy-Item -LiteralPath $src -Destination $dstDir -Force
     } else {
         Copy-Item -LiteralPath $src -Destination (Join-Path $dstDir $dstName) -Force
@@ -47,39 +55,40 @@ function Copy-Dir($name) {
     }
 }
 
-# ---- single files at the repository root
+# root-level sources
 foreach ($f in @("paper.tex", "ControlSheet.tex", "apmcmthesis.cls",
                  "apmcmthesis.cfg", "requirements.txt", "env.txt")) {
     Copy-One (Join-Path $Repo $f) $Target $null
 }
 
-# ---- compiled artefacts
+# compiled artefacts
 Copy-One (Join-Path $Repo "paper.pdf") $Target "paper.pdf"
 Copy-One (Join-Path $Repo "paper.pdf") $Target "Capmcm263XXXXX.pdf"
 Copy-One (Join-Path $Repo "ControlSheet.pdf") $Target $null
 
-# ---- generated / analytical directories
+# generated / analytical directories
 foreach ($d in @("code", "results", "eda", "figures", "tables")) {
     Copy-Dir $d
 }
 
-# ---- submission README comes from docs/, not from the repository README
+# submission README lives in docs/, not at the repository root
 Copy-One (Join-Path $Repo "docs\submission-readme.md") $Target "README.md"
 
-# ---- optional cleanup of stale artefacts and leftovers
 if ($Clean) {
-    $patterns = @("*.aux", "*.log", "*.toc", "*.synctex.gz", "*.out")
-    foreach ($p in $patterns) {
+    foreach ($p in @("*.aux", "*.log", "*.toc", "*.synctex.gz", "*.out", "chk.pdf")) {
         Get-ChildItem -LiteralPath $Target -Filter $p -File -ErrorAction SilentlyContinue |
             Remove-Item -Force -ErrorAction SilentlyContinue
     }
     foreach ($stray in @("build", "code\_extract.py", "code\06_figures_extra.py",
                          "code\__pycache__")) {
         $p = Join-Path $Target $stray
-        if (Test-Path -LiteralPath $p) { Remove-Item -LiteralPath $p -Recurse -Force }
+        if (Test-Path -LiteralPath $p) {
+            Remove-Item -LiteralPath $p -Recurse -Force
+            Write-Host ("removed {0}" -f $stray)
+        }
     }
-    Write-Host "cleaned stale artefacts"
 }
 
-Write-Host ("synced {0} files from {1}" -f $copied, $Repo)
+Write-Host ("synced {0} files" -f $copied)
+Write-Host ("source: {0}" -f $Repo)
 Write-Host ("target: {0}" -f $Target)
