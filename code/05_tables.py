@@ -206,9 +206,9 @@ for ct in ["flat", "mod", "tv"]:
 body = r"""\begin{table}[!ht]
 \centering
 \caption{Effective communication range (m) under the three recognition tiers. Columns
-3--4 give point estimates of the selected model; the bracket in column 2 is a 95\%
-bootstrap interval (1000 resamples, within-distance resampling) and column 5 is the
-range obtained across the three candidate model forms.}
+2--4 give point estimates of the selected model; the bracket in column 2 is a 95\%
+bootstrap interval (1000 whole-recording row-wise resamples preserving the distance
+pairing) and column 5 is the range obtained across the three candidate model forms.}
 \label{tab:range}
 \footnotesize
 \begin{tabular}{lcccc}
@@ -346,21 +346,24 @@ rows = []
 for ct in ["flat", "mod", "tv"]:
     cr = q4["ce_radius_m"][ct]
     comp = q4["component_radius_m"][ct]
-    s1 = q4["sensitivity_threshold"]["0.6"][ct]
-    s2 = q4["sensitivity_threshold"]["0.7"][ct]
+    s1 = q4["sensitivity_recognition_threshold_on_F"]["0.6"][ct]
+    s2 = q4["sensitivity_recognition_threshold_on_F"]["0.7"][ct]
     s3 = q4["sensitivity_correlation_reduction"]["20%"][ct]
     rows.append(f"{ct} & {cr:.1f} & {comp['signal']:.1f} & {comp['response']:.1f} & "
                 f"{s1:.1f} & {s2:.1f} & {s3:.1f}\\\\")
 body = r"""\begin{table}[!ht]
 \centering
 \setlength{\tabcolsep}{4pt}
-\caption{Communication-effectiveness radius (m). Columns 3--4 give the two component
-radii; columns 5--7 give the index radius under the three stress scenarios.}
+\caption{Communication-effectiveness radius (m). Column 2 is the index radius at the
+0.5 decision line; columns 3--4 the two component radii (signal fidelity and response
+probability, each at 0.5); columns 5--6 the range under a stricter \emph{recognition}
+correlation threshold applied to the signal fidelity $F_c(d)$; column 7 the index radius
+under a global $-20\%$ correlation loss.}
 \label{tab:ce}
 \scriptsize
 \begin{tabular}{lcccccc}
 \toprule
-Call & CE radius & Signal only & Response only & Threshold 0.6 & Threshold 0.7 & Correlation $-20\%$\\
+Call & CE radius & Signal $F{=}0.5$ & Response $P{=}0.5$ & Recog.\ $F{=}0.6$ & Recog.\ $F{=}0.7$ & Corr.\ $-20\%$\\
 \midrule
 """ + "\n".join(rows) + r"""
 \bottomrule

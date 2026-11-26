@@ -50,9 +50,10 @@ essentially never produce. Treating non-responses as right-censored, Cox models 
 stimulus hazard ratios of $4.9$ for head raising and $21.7$ for vocalising.
 
 The combined communication-effectiveness index has a half-maximum radius of $96$, $158$
-and $203$ m; under a strict $0.7$ recognition criterion these collapse to $30$, $54$ and
-$71$ m, while a $20\%$ global loss of correlation costs roughly $15$--$20\%$ of the effective range. Two-voice calls are
-the most robust carrier at every distance and threshold.
+and $203$ m; under a strict $0.7$ signal-recognition threshold the ranges fall to $34$,
+$76$ and $98$ m, while a $20\%$ global loss of correlation costs $14$--$23\%$ of
+the effective range. Two-voice calls are the most robust carrier at every distance and
+threshold.
 
 \keywords{acoustic communication; structural missingness; proportional odds; survival
 analysis; communication range}
@@ -202,7 +203,11 @@ are far more similar than their names suggest. Median duration is $0.367$ s for 
 calls, $0.394$ s for modulated calls and $0.383$ s for two-voice calls, and the
 interquartile ranges overlap almost completely. The clearest visual separation is in peak
 frequency: flat calls peak at a median of $916$ Hz, whereas modulated and two-voice calls
-peak at $831$ and $830$ Hz.
+peak at $831$ and $830$ Hz. The second fundamental and the pulse rate are definitional
+rather than comparable---$F_{02}$ exists only in two-voice calls, and the pulse rate is
+absent from all $44$ flat calls, a continuous call having no pulse to measure---so they
+are described qualitatively (Table~\ref{tab:audit}) and excluded to avoid learning the
+missingness itself.
 
 \begin{figure}[!ht]
 \centering
@@ -266,9 +271,12 @@ $F_{\mathrm{peak}}/F_{01}$ and the median-to-fundamental ratio $Q_{50}/F_{01}$ e
 where the energy sits relative to the fundamental, which is the dimension along which a
 modulated or two-voice call should differ from a flat one. A random forest on these three
 measures reaches $0.639$ accuracy, a gain of $0.158$ over the raw set, with per-class F1
-scores of $0.723$ (flat), $0.667$ (modulated) and $0.462$ (two-voice). Feature importance
-is spread almost evenly ($0.358$, $0.344$ and $0.299$), which is what one expects when
-the three measures describe a single shape.
+scores of $0.723$ (flat), $0.667$ (modulated) and $0.462$ (two-voice). Out-of-fold
+permutation importance is not even: the peak-to-fundamental ratio dominates ($0.205$
+decrease in held-out accuracy), the median-to-fundamental ratio follows ($0.131$), and
+bandwidth contributes least ($0.053$). In-training Gini importance, by contrast, spreads
+almost evenly ($0.358$, $0.344$, $0.299$), showing how correlated predictors share
+in-training importance.
 
 Reintroducing the structural flags lifts accuracy to $0.944$, and the linear methods are
 affected far less ($0.630$ and $0.935$ for LDA and SVM respectively). The interpretation
@@ -290,9 +298,11 @@ the engineered measures. Right: importance of the three engineered measures.}
 
 \subsection{Which measures carry forward}
 
-The analysis leaves a clear ranking. Peak frequency and the first fundamental are the
-only measures with a defensible between-type effect, and the ratios built on them are
-what the classifier actually uses. Duration and the upper quartile contribute nothing.
+The analysis leaves a clear ranking. Peak frequency and the first fundamental carry the
+only defensible between-type effects, and out-of-fold permutation importance confirms the
+first fundamental as the most informative raw measure ($0.116$), with peak frequency a
+distant second ($0.020$) and the quartiles contributing nothing. The ratios built on
+these two quantities are what the classifier actually uses.
 For Questions 2 and 3 we therefore retain the spectral-shape quantities (peak and median
 frequency relative to the fundamental, and bandwidth) as the interpretable core, and we
 treat the presence of a second fundamental and of pulse structure as categorical
@@ -375,10 +385,13 @@ range of flat calls at every tier.
 
 \input{tables/tab06_range}
 
-Two sources of uncertainty are reported separately. The bootstrap interval, obtained by
-resampling observations within each distance cell and refitting $1000$ times, is narrow,
-about $\pm1$ m. That narrowness is itself informative: it says that the sampling error of
-the distance-specific means is small, and that the dominant uncertainty lies elsewhere.
+Two sources of uncertainty are reported separately. The bootstrap interval is obtained by
+resampling whole recordings (rows) with replacement---preserving the pairing of the same
+call across distances and across metrics---and refitting the selected decay model $1000$
+times. The intervals are narrow, roughly $\pm1$ m for flat calls and $\pm2$--$4$ m for
+modulated and two-voice calls. That narrowness is itself informative: it says that the
+sampling error of the distance-specific means is small, and that the dominant uncertainty
+lies elsewhere.
 
 The dominant uncertainty is model form. Refitting the same thresholds under the three
 candidate decay shapes gives the bands in the last column of Table~\ref{tab:range}:
@@ -445,7 +458,8 @@ expected because fine temporal structure is lost before spectral structure.
 Natural calls elicited a response in $90$ of $139$ trials ($64.8\%$), control sounds in
 $18$ of $139$ ($12.9\%$). The difference is large and unambiguous
 ($\chi^2=78.49$, $p=8.0\times10^{-19}$, Cram\'er's $V=0.531$; Fisher exact odds ratio
-$0.081$, $p=1.9\times10^{-19}$; risk difference $0.518$). This is the backbone result of
+$12.3$ in favour of natural calls, $p=1.9\times10^{-19}$; risk difference $0.518$). This is
+the backbone result of
 the question: penguins at sea do respond to conspecific calls, and the response is not a
 general reaction to any underwater sound.
 
@@ -512,8 +526,10 @@ extra parameters once the proportionality assumption is rejected. Its implied
 distributions are stark: for control stimuli the predicted shares of zero, one, two and
 three behaviours are $0.871$, $0.129$, $0.000$ and $0.000$, whereas for natural calls they
 are $0.353$, $0.288$, $0.259$ and $0.101$. Natural calls do not merely raise the
-probability of some response; they change the shape of the response profile, generating
-multi-behaviour responses that control sounds essentially never produce.
+probability of some response; in this sample they also change the shape of the response
+profile, multi-behaviour responses being observed almost exclusively under natural-call
+playbacks. Because the control group contains no approach events, this difference is a
+sample observation rather than an estimated causal effect size.
 
 \begin{figure}[!ht]
 \centering
@@ -526,12 +542,11 @@ by stimulus type.}
 \subsection{Response latency as a censored outcome}
 
 A trial in which no behaviour is recorded is not a trial in which the stimulus was not
-perceived, so treating non-responses as censored observations is the appropriate
-formulation. For each behaviour the event indicator comes from the recorded yes/no
-outcome and the time is the recorded latency; trials with no behaviour are censored at
-the observation window, taken as the longest observed latency. Consistency checks showed
-that a small number of trials recorded a behaviour without a latency, and these were
-excluded rather than imputed.
+perceived, so non-responses are treated as right-censored. The data do not state the
+observation window, so non-responses are censored at a surrogate time equal to the longest
+observed latency ($10.0$ s head raising, $47.8$ s vocalising, $34.0$ s approaching), an
+assumption tested below. Four vocalising and five approaching trials record a latency with
+a zero flag; these are kept as censored rather than silently dropped.
 
 Figure~\ref{fig:km} and Table~\ref{tab:surv} give the Kaplan--Meier\cite{km} curves and Cox\cite{cox} models.
 The stimulus effect is strong for all three behaviours: hazard ratios of $4.90$
@@ -539,7 +554,9 @@ The stimulus effect is strong for all three behaviours: hazard ratios of $4.90$
 C-indices of $0.726$ and $0.756$. Distance attenuates the head-raising hazard
 ($0.247$ per decade, $[0.124,0.492]$) but not the vocalising hazard, which is compatible
 with vocalising being a short-range, within-group signal while head raising is directed at
-more distant stimuli.
+more distant stimuli. Varying the surrogate censoring time over $0.5\times$--$1.5\times$
+leaves the head-raising hazard ratio almost unchanged ($4.4$--$4.9$) but moves the
+vocalising ratio between $21.7$ and $26.9$; the effect remains strongly positive throughout.
 
 \begin{figure}[!ht]
 \centering
@@ -585,30 +602,30 @@ statement notes, no response does not mean no perception.
 \subsection{Defining the index}
 
 Signal fidelity alone is not communication, and a response probability alone does not
-specify whether the animal could identify the caller. We therefore combine the two
-components already estimated:
+specify whether the animal could identify the caller. To compare scenarios on a common
+scale we therefore combine the two components into a composite index
 \begin{equation}
 \mathrm{CE}_c(d)=w_1 F_c(d)+w_2\,P_c(d),
 \qquad w_1+w_2=1,
 \label{eq:ce}
 \end{equation}
 where $F_c(d)$ is the fidelity index of Equation~\eqref{eq:fidelity} and $P_c(d)$ is the
-predicted probability that a playback at distance $d$ elicits any response, evaluated at
-the median group size of $8$ and the most common context. Both components lie in
-$[0,1]$ and both are monotonically decreasing in $d$, so the index is directly
-interpretable: a value of $0.5$ means that the signal is identifiable at the
-potential-recognition level and that a response is more likely than not.
+predicted probability of any response at distance $d$, evaluated at median group size $8$
+and the most common context. This index is a modelling construct, not a measured
+ecological quantity: the equal weights and the $0.5$ line are conventions, and a value of
+$0.5$ does not imply that either component separately reaches $0.5$. We always report the
+component radii alongside it, so no radius is read as a literal communication distance.
 
-The weights carry ecological meaning rather than being free parameters. $w_1$ expresses
-how much of effective communication depends on the physical availability of the signal,
-and $w_2$ how much depends on the receiver's propensity to act on it. We set both to
-$0.5$ and test the choice below; the index radius moves by less than $6\%$ across the
-range $w_1\in[0.3,0.7]$, so the conclusion does not depend on this choice.
+The weights carry an ecological reading: $w_1$ weights the physical availability of the
+signal and $w_2$ the receiver's propensity to act on it. We set both to $0.5$ and test
+the choice below; the index radius moves by less than $6\%$ across the range
+$w_1\in[0.3,0.7]$, so the qualitative ordering does not depend on this choice.
 
-We take the effective communication radius
-$d^{\mathrm{CE}}_c=\min\{d:\mathrm{CE}_c(d)=0.5\}$. The component radii provide a
-diagnostic: if the signal radius is much smaller than the response radius, the limit is
-physical propagation; if the reverse, the limit is behavioural.
+We take the index radius
+$d^{\mathrm{CE}}_c=\min\{d:\mathrm{CE}_c(d)=0.5\}$ as a scenario-comparison summary. The
+component radii provide a diagnostic: if the signal radius is much smaller than the
+response radius, the limit is physical propagation; if the reverse, the limit is
+behavioural.
 
 \input{tables/tab10_ce}
 
@@ -643,7 +660,10 @@ empirical group-size distribution of the $278$ trials:
 \begin{equation}
 \mathbb{E}[R_c(d)]=\sum_{g} \pi(g)\, g\, P_c(d,g),
 \end{equation}
-where $\pi(g)$ is the observed relative frequency of group size $g$. At $50$ m the
+where $\pi(g)$ is the observed relative frequency of group size $g$. This treats the
+per-trial response probability as an individual response probability, which is a
+simplification: the playback data record whether \emph{any} penguin in the group
+responded, not how many, so the expected numbers inherit that assumption. At $50$ m the
 expected numbers are $4.8$ (flat), $5.3$ (modulated) and $5.9$ (two-voice); at $200$ m
 they are $3.0$, $3.5$ and $4.0$. The decline with distance is shallower than the decline
 in response probability, because larger groups respond at a slightly lower per-trial rate
@@ -662,12 +682,14 @@ scenario corresponding to increased ambient noise or adverse sea state.}
 
 Three stress tests were applied.
 
-\paragraph{Raising the recognition threshold.} Moving the recognition criterion from
-$0.5$ to $0.6$ and then $0.7$ reduces the index radius from $96$ to $58$ to $30$ m for
-flat calls, from $158$ to $105$ to $54$ m for modulated calls, and from $203$ to $148$ to
-$71$ m for two-voice calls. The relative penalty is similar across call types, so the
-ranking is preserved, but the absolute loss is severe: at the strictest threshold even
-two-voice calls are effectively short-range signals.
+\paragraph{Raising the recognition threshold.} The recognition criterion is a statement
+about the correlation between a degraded and the original signal, so it should be moved on
+the fidelity curve $F_c(d)$, not the composite index. On $F_c(d)$ the ranges fall from $87$
+to $58$ to $34$ m (flat), $156$ to $118$ to $76$ m (modulated) and $192$ to $157$ to $98$ m
+(two-voice), matching Question~2. Applied instead as an index decision threshold on
+$\mathrm{CE}_c(d)$---a distinct quantity that also encodes the response probability---the
+same numbers give $96$ to $58$ to $30$ m, $158$ to $105$ to $54$ m and $203$ to $148$ to
+$71$ m. Either way the ranking is preserved, but the loss is severe.
 
 \paragraph{Global loss of signal correlation.} If environmental noise reduces every
 correlation by $5\%$, $10\%$, $15\%$ or $20\%$, the flat-call radius falls from $96$ to
@@ -690,9 +712,9 @@ natural target for passive acoustic monitoring. Second, the binding constraint d
 call type, which matters for management: protecting flat-call communication means
 protecting the acoustic channel, whereas protecting two-voice communication is limited
 more by masking of the received signal than by the animals' willingness to respond. Third,
-the sensitivity to the recognition threshold is larger than the sensitivity to a global
-noise reduction of the same nominal magnitude, so management should be anchored to a
-stated recognition criterion rather than to an unstated ``audible'' range.
+the sensitivity to the signal-recognition threshold is larger than the sensitivity to a
+global noise reduction of the same nominal magnitude, so management should be anchored to
+a stated recognition criterion rather than to an unstated ``audible'' range.
 
 The limitations are equally clear. The sample is small, the response models are
 observational, and the playback data do not identify individual listeners, so the group
@@ -707,25 +729,23 @@ another site would require a new calibration.
 \paragraph{Internal validity.} Every classifier was evaluated by five-fold
 cross-validation with a fixed seed, and every regression was checked against an
 events-per-variable budget recorded before fitting. All reported radii are interior
-solutions of the fitted curves, verified against the grid endpoints.
+solutions of the fitted curves.
 
-\paragraph{Sensitivity.} For Question 2 the two dominant uncertainties are sampling
-error, which contributes about $\pm1$ m, and model form, which contributes a band of up to
-$20$ m for flat and modulated calls and much more for two-voice calls. For Question 4 the
-index radius moves by less than $6\%$ across a factor-of-two change in the weight $w_1$,
-and by about $15$--$20\%$ under a $20\%$ global loss of correlation.
+\paragraph{Sensitivity.} For Question 2 the dominant uncertainties are sampling error
+(about $\pm1$--$4$ m, from whole-recording bootstrap) and model form (up to $20$ m for flat
+and modulated calls, much more for two-voice calls). For Question 4 the index radius moves
+by less than $6\%$ across a factor-of-two change in $w_1$, and by about $15$--$20\%$ under
+a $20\%$ global loss of correlation.
 
-\paragraph{Assumption checks.} Proportional hazards passes for the head-raising model on
-both covariates and for the approach model, but fails for the distance term in the
-vocalising model. Proportional odds for the behaviour count is rejected, and we switched
-to the multinomial model rather than reporting a restricted fit. Both failures are
-reported rather than suppressed.
+\paragraph{Assumption checks.} Proportional hazards passes for head raising but fails for
+the distance term in the vocalising model; proportional odds for the behaviour count is
+rejected, and we switched to the multinomial model. Both failures are reported rather than
+suppressed.
 
 \paragraph{Threats to validity.} The absence of individual identification is the largest
-threat, because it makes the group-size coefficient ambiguous between a dilution effect
-and a repeated-measures artefact. The absence of a measured observation window in the
-public data means that the censoring time had to be set to the longest observed latency,
-which is a conservative choice but not the true experimental design.
+threat, making the group-size coefficient ambiguous between a dilution effect and a
+repeated-measures artefact. The censoring time is a surrogate for the unstated observation
+window and is handled as a scenario assumption.
 
 %=====================================================================
 \section{Strengths and weaknesses}
@@ -751,11 +771,11 @@ remains a modelling choice.
 \section{Conclusions}\label{sec:concl}
 
 \begin{enumerate}[label=\textbf{(\arabic*)},leftmargin=*]
-\item Of the six acoustic measures that can be compared fairly across call types, only
-peak frequency, the first fundamental and the median frequency differ significantly, and
-the effect sizes are small ($\varepsilon^2\le0.10$). The apparent ease of separating the
-three call types is an artefact of definitional variables: a classifier using them reaches
-$0.944$ accuracy, while the same classifier on acoustic shape alone reaches $0.639$.
+\item Of the six comparable acoustic measures, only peak frequency, the first fundamental
+and the median frequency differ significantly, with small effect sizes
+($\varepsilon^2\le0.10$). The apparent ease of separating the call types is an artefact of
+definitional variables: a classifier using them reaches $0.944$, while acoustic shape alone
+reaches $0.639$.
 
 \item Acoustic fidelity falls from about $0.8$ at $4$ m to between $0.18$ and $0.28$ at
 $256$ m. Effective ranges at the potential-recognition tier are $87$, $156$ and $192$ m
@@ -770,47 +790,36 @@ ratio $21.7$). All $23$ approach events occurred in natural-call trials, so that
 is a qualitative separation rather than an estimable odds ratio.
 
 \item The communication-effectiveness index gives radii of $96$, $158$ and $203$ m for
-flat, modulated and two-voice calls. Under a strict recognition threshold these collapse
-to $30$, $54$ and $71$ m. The ranking is stable under every scenario tested, which is the
-result most relevant for conservation.
+flat, modulated and two-voice calls, falling to $34$, $76$ and $98$ m under a strict
+$0.7$ recognition threshold; the ranking is stable under every scenario tested.
 
-\item For conservation, the practical implication is that the effective acoustic range of
-this species is on the order of one to two hundred metres in typical coastal water, not
-kilometres, and that it depends strongly on the recognition criterion adopted. Any
-management measure that assumes a larger acoustic range is optimistic.
+\item For conservation, the effective acoustic range of this species is on the order of
+one to two hundred metres in typical coastal water, not kilometres, and it depends
+strongly on the recognition criterion adopted; management that assumes a larger range is
+optimistic.
 \end{enumerate}
 
 %=====================================================================
 \section*{Recommendations for conservation practice}
 \addcontentsline{toc}{section}{Recommendations for conservation practice}
 
-Three measures follow from the models, each with a stated condition of applicability.
+\emph{Protect the near-field acoustic channel around foraging aggregations.} The weakest
+call type carries less than $100$ m even at a permissive threshold, so broadband vessel
+noise within a few hundred metres can mask communication for the whole group; a roughly
+$200$ m exclusion radius around active aggregations is consistent with the two-voice
+radius.
 
-\emph{Protect the near-field acoustic channel around foraging aggregations.} Because the
-effective range of the weakest call type is under $100$ m even at a permissive threshold,
-vessel traffic and other broadband sources within a few hundred metres of a foraging group
-can mask communication for the whole group. A precautionary exclusion radius of roughly
-$200$ m around active foraging aggregations is consistent with the two-voice radius, the
-most permissive estimate obtained here. This applies to mechanised vessels rather than to
-kayaks or sailing craft, whose noise is concentrated at higher frequencies; it does not
-apply to colonies, where communication is not visually limited in the same way.
+\emph{Treat passive acoustic monitoring as a short-range tool.} Monitoring that assumes
+detection at kilometres will underestimate occupancy; with a potential-recognition range of
+$87$--$192$ m, hydrophones should be spaced in hundreds of metres, not kilometres.
 
-\emph{Treat passive acoustic monitoring as a short-range tool.} Any monitoring programme
-that assumes detection at kilometres will systematically underestimate occupancy. Given a
-potential-recognition range of $87$--$192$ m, hydrophone spacing should be planned in
-hundreds of metres, not kilometres, and detection probability should be modelled as a
-function of distance rather than assumed constant.
+\emph{Prioritise masking reduction over source removal.} A $20\%$ global correlation loss
+costs $14$--$23\%$ of range, whereas raising the recognition threshold from $0.5$ to
+$0.7$ costs $49$--$62\%$; reducing impulsive noise during peak foraging is
+therefore likely more effective than blanket noise limits.
 
-\emph{Prioritise masking reduction over source removal in noisy habitats.} The scenario
-analysis shows that a $20\%$ global loss of correlation costs about $15$--$20\%$ of the
-effective range, whereas raising the recognition criterion from $0.5$ to $0.7$ costs about
-$70\%$. Because the second effect dominates, measures that preserve the \emph{identifiability}
-of the signal, such as reducing impulsive noise during peak foraging hours rather than
-reducing overall sound level, are likely to be more effective than blanket noise limits.
-
-These recommendations rest on a small observational sample from one region, and the
-ranges should be treated as order-of-magnitude guidance rather than as regulatory
-thresholds until replicated with individually marked birds.
+These recommendations rest on a small observational sample from one region and are
+order-of-magnitude guidance until replicated with marked birds.
 
 %=====================================================================
 \begin{thebibliography}{9}

@@ -31,6 +31,8 @@
     "cramers_v": 0.5314,
     "fisher_or": 0.081,
     "p_fisher": 1.9192951034665862e-19,
+    "fisher_or_call_vs_control": 12.347,
+    "fisher_or_note": "scipy returns the odds of response in the first row (natural call) relative to the second (control); the reciprocal is reported as natural versus control",
     "risk_difference": 0.518
   },
   "logit_response_all": {
@@ -594,7 +596,9 @@
       "n_events": 68,
       "censored": 210,
       "dropped_flag_without_latency": 0,
+      "mismatch_latency_without_flag": 0,
       "censor_time": 10.0,
+      "censor_time_note": "surrogate: longest observed latency (observation window not stated in the data)",
       "logrank_p": 7.3607936380051574e-09,
       "logrank_stat": 33.437,
       "median_latency_call": 2.0,
@@ -632,6 +636,20 @@
         "ph_test": {
           "call": 0.0648,
           "log_dist": 0.478
+        },
+        "censor_time_sensitivity_hr": {
+          "0.5x": {
+            "call": 4.374,
+            "log_dist": 0.222
+          },
+          "1.0x": {
+            "call": 4.904,
+            "log_dist": 0.247
+          },
+          "1.5x": {
+            "call": 4.904,
+            "log_dist": 0.247
+          }
         }
       }
     },
@@ -639,7 +657,9 @@
       "n_events": 81,
       "censored": 197,
       "dropped_flag_without_latency": 0,
+      "mismatch_latency_without_flag": 4,
       "censor_time": 47.8,
+      "censor_time_note": "surrogate: longest observed latency (observation window not stated in the data)",
       "logrank_p": 1.6720656994115984e-21,
       "logrank_stat": 90.7,
       "median_latency_call": 2.9,
@@ -677,6 +697,20 @@
         "ph_test": {
           "call": 0.7743,
           "log_dist": 0.0065
+        },
+        "censor_time_sensitivity_hr": {
+          "0.5x": {
+            "call": 26.924,
+            "log_dist": 1.189
+          },
+          "1.0x": {
+            "call": 21.659,
+            "log_dist": 1.177
+          },
+          "1.5x": {
+            "call": 21.659,
+            "log_dist": 1.177
+          }
         }
       }
     },
@@ -684,7 +718,9 @@
       "n_events": 23,
       "censored": 255,
       "dropped_flag_without_latency": 0,
+      "mismatch_latency_without_flag": 5,
       "censor_time": 34.0,
+      "censor_time_note": "surrogate: longest observed latency (observation window not stated in the data)",
       "logrank_p": 5.662588164358078e-07,
       "logrank_stat": 25.024,
       "median_latency_call": 8.0,
@@ -712,6 +748,17 @@
         },
         "ph_test": {
           "log_dist": 0.2308
+        },
+        "censor_time_sensitivity_hr": {
+          "0.5x": {
+            "log_dist": 0.242
+          },
+          "1.0x": {
+            "log_dist": 0.329
+          },
+          "1.5x": {
+            "log_dist": 0.329
+          }
         }
       }
     }

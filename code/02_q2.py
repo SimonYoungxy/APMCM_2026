@@ -141,20 +141,29 @@ for ct in CALL_TYPES:
 res["radius_m"] = radius
 
 # ---------------------------------------------------------------- bootstrap
+# Whole-recording (row-wise) resampling. Each CSV row is one call recorded at all
+# seven distances; the three metric files for a call type are aligned row-for-row
+# (identical missingness pattern), so a shared row index is resampled and every
+# distance column of the sampled rows is kept. This preserves the pairing of a call
+# across distances and metrics that independent per-cell resampling would destroy.
 NB = 1000
 boot = {ct: {lvl: [] for lvl in THRESHOLDS} for ct in CALL_TYPES}
+n_rows = {ct: raw[(ct, "spectrogram")].shape[0] for ct in CALL_TYPES}
 for b in range(NB):
     for ct in CALL_TYPES:
-        # resample rows within each distance for each metric, then rebuild the index
-        yv = []
+        idx = rng.integers(0, n_rows[ct], size=n_rows[ct])  # shared across metrics
+        yv = np.full(len(DIST_M), np.nan)
         for j in range(len(DIST_M)):
             per_metric = []
             for m in METRICS:
-                col = raw[(ct, m)][:, j]
+                col = raw[(ct, m)][idx, j]   # same resampled rows for all metrics
                 col = col[np.isfinite(col)]
-                per_metric.append(rng.choice(col, size=col.size, replace=True).mean())
-            yv.append(np.mean(per_metric))
-        yv = np.array(yv)
+                if col.size:
+                    per_metric.append(col.mean())
+            if per_metric:
+                yv[j] = float(np.mean(per_metric))
+        if not np.all(np.isfinite(yv)):
+            continue
         w = np.array([min(counts[(ct, m)][j] for m in METRICS)
                       for j in range(len(DIST_M))], dtype=float)
         try:

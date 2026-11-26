@@ -862,11 +862,6 @@
     "Fpeak/F01": 0.3576,
     "Q50/F01": 0.3435
   },
-  "engineered_permutation_importance": {
-    "bandwidth Q75-Q25": 0.1759,
-    "Fpeak/F01": 0.3704,
-    "Q50/F01": 0.3056
-  },
   "raw_importance_mdi": {
     "Duration": 0.1663,
     "F01": 0.2024,
@@ -874,5 +869,18 @@
     "Q25": 0.1667,
     "Q50": 0.1596,
     "Q75": 0.1424
+  },
+  "raw_permutation_importance_cv": {
+    "Duration": 0.0005,
+    "F01": 0.1157,
+    "Fpeak": 0.0199,
+    "Q25": 0.0096,
+    "Q50": 0.0048,
+    "Q75": -0.0461
+  },
+  "engineered_permutation_importance_cv": {
+    "bandwidth Q75-Q25": 0.0534,
+    "Fpeak/F01": 0.2048,
+    "Q50/F01": 0.1309
   }
 }

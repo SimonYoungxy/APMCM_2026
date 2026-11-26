@@ -21,6 +21,7 @@ import scikit_posthocs as sp
 import seaborn as sns
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.inspection import permutation_importance
 from sklearn.metrics import (accuracy_score, confusion_matrix, f1_score,
                              precision_recall_fscore_support)
 from sklearn.model_selection import StratifiedKFold, cross_val_predict
@@ -163,21 +164,35 @@ res["feature_set_definitions"] = {
     "C_raw6+structural": "A + has_F02, has_PulseRate, F02_filled, PulseRate_filled"}
 
 # ------------------------------------------------------------ importance
+# MDI is reported only for reference; the robust "main influencing factors"
+# evidence is the out-of-fold (cross-validated) permutation importance, which is
+# evaluated on held-out folds rather than on the training data.
 rfB = RandomForestClassifier(n_estimators=800, class_weight="balanced",
                              random_state=SEED, n_jobs=-1).fit(eng3, y)
 impB = dict(zip(ENG_NAMES, np.round(rfB.feature_importances_, 4).tolist()))
-permB = {}
-base_acc = accuracy_score(y, rfB.predict(eng3))
-for j, nm in enumerate(ENG_NAMES):
-    Xp = eng3.copy()
-    Xp[:, j] = rng.permutation(Xp[:, j])
-    permB[nm] = round(float(base_acc - accuracy_score(y, rfB.predict(Xp))), 4)
 res["engineered_importance_mdi"] = {k: float(v) for k, v in impB.items()}
-res["engineered_permutation_importance"] = permB
 
 rfA = RandomForestClassifier(n_estimators=800, class_weight="balanced",
                              random_state=SEED, n_jobs=-1).fit(raw6, y)
 res["raw_importance_mdi"] = dict(zip(FEATS, np.round(rfA.feature_importances_, 4).tolist()))
+
+
+def cv_permutation_importance(X, yv, feat_names):
+    """Mean decrease in held-out accuracy from permuting each feature, averaged
+    over the 5 stratified folds (out-of-fold, so no training-set leakage)."""
+    imp = {n: [] for n in feat_names}
+    for tr, te in cv.split(X, yv):
+        rf = RandomForestClassifier(n_estimators=800, class_weight="balanced",
+                                    random_state=SEED, n_jobs=-1).fit(X[tr], yv[tr])
+        r = permutation_importance(rf, X[te], yv[te], n_repeats=10,
+                                   random_state=SEED, scoring="accuracy", n_jobs=-1)
+        for i, n in enumerate(feat_names):
+            imp[n].append(float(r.importances_mean[i]))
+    return {n: round(float(np.mean(v)), 4) for n, v in imp.items()}
+
+
+res["raw_permutation_importance_cv"] = cv_permutation_importance(raw6, y, FEATS)
+res["engineered_permutation_importance_cv"] = cv_permutation_importance(eng3, y, ENG_NAMES)
 
 # ------------------------------------------------------------ figure 1
 fig, axes = plt.subplots(2, 3, figsize=(10.5, 6.0))
@@ -254,11 +269,11 @@ axes[1].set_xlabel("predicted"); axes[1].set_ylabel("observed")
 axes[1].set_title("RF on engineered features")
 fig.colorbar(im, ax=axes[1], fraction=0.046)
 
-order = np.argsort([res["engineered_importance_mdi"][n] for n in ENG_NAMES])
+order = np.argsort([res["engineered_permutation_importance_cv"][n] for n in ENG_NAMES])
 axes[2].barh([ENG_NAMES[i] for i in order],
-             [res["engineered_importance_mdi"][ENG_NAMES[i]] for i in order],
+             [res["engineered_permutation_importance_cv"][ENG_NAMES[i]] for i in order],
              color="#55A868", alpha=0.9)
-axes[2].set_xlabel("MDI importance")
+axes[2].set_xlabel("CV permutation importance (held-out acc. decrease)")
 axes[2].set_title("Engineered feature importance")
 fig.tight_layout()
 fig.savefig(os.path.join(FIG, "fig03_classifier.png"))

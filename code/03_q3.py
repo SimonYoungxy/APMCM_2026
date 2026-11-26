@@ -80,6 +80,10 @@ res["overall_response"] = {
     "chi2": round(float(chi2), 3), "df": int(dof), "p_chi2": float(p_chi),
     "cramers_v": round(float(cramers_v), 4),
     "fisher_or": round(float(odds), 3), "p_fisher": float(p_fish),
+    "fisher_or_call_vs_control": round(float(1.0 / odds), 3),
+    "fisher_or_note": ("scipy returns the odds of response in the first row "
+                       "(natural call) relative to the second (control); the "
+                       "reciprocal is reported as natural versus control"),
     "risk_difference": round(float(d.loc[d.Type == "call", "ResponseYesNo"].mean()
                                    - d.loc[d.Type == "control", "ResponseYesNo"].mean()), 4),
 }
@@ -218,9 +222,13 @@ for name, (flag_col, col) in LAT.items():
     lr = logrank_test(tt[d.Type == "call"], tt[d.Type == "control"],
                       event_observed_A=event[d.Type == "call"],
                       event_observed_B=event[d.Type == "control"])
+    mismatch = int(((flag == 0) & t.notna()).sum())   # latency recorded but YesNo = 0
     surv[name] = {"n_events": int(event.sum()), "censored": int(cens_mask.sum()),
                   "dropped_flag_without_latency": dropped,
+                  "mismatch_latency_without_flag": mismatch,
                   "censor_time": round(censor_time, 2),
+                  "censor_time_note": ("surrogate: longest observed latency "
+                                       "(observation window not stated in the data)"),
                   "logrank_p": float(lr.p_value),
                   "logrank_stat": round(float(lr.test_statistic), 3)}
     for grp in ["call", "control"]:
@@ -252,6 +260,19 @@ for name, (flag_col, col) in LAT.items():
                                   time_transform="rank")
     cox_tables[name]["ph_test"] = {str(i): round(float(v), 4)
                                    for i, v in ph.summary["p"].items()}
+    # sensitivity of the Cox model to the surrogate censoring time (0.5x / 1x / 1.5x)
+    censor_sens = {}
+    for mult, lab in [(0.5, "0.5x"), (1.0, "1.0x"), (1.5, "1.5x")]:
+        tt_s = pd.Series(np.where(ev_mask, t.clip(lower=0.1), censor_time * mult),
+                         index=d.index)
+        cdf_s = pd.DataFrame({"T": tt_s, "E": event,
+                              "call": (d.Type == "call").astype(float).values,
+                              "log_dist": d["log_dist"].values}, index=d.index)
+        cph_s = CoxPHFitter()
+        cph_s.fit(cdf_s[["T", "E"] + cols], duration_col="T", event_col="E")
+        censor_sens[lab] = {k: round(float(np.exp(cph_s.summary.loc[k, "coef"])), 3)
+                            for k in cols if k in cph_s.summary.index}
+    cox_tables[name]["censor_time_sensitivity_hr"] = censor_sens
     surv[name]["cox"] = cox_tables[name]
 
 res["survival"] = surv

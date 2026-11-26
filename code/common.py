@@ -2,9 +2,8 @@
 import os
 import numpy as np
 
-BASE = r"D:\Grade 2\数学建模\APMCM2026_C"
-DATA = (r"D:\Grade 2\数学建模\2026 APMCM Problems\2026 APMCM Problems"
-        r"\2026 APMCM Problem C\date")
+BASE = r"D:\Grade 2\数学建模\apmcm2026-problem-c"
+DATA = r"D:\Grade 2\数学建模\apmcm2026-problem-c\data"
 FIG = os.path.join(BASE, "figures")
 RES = os.path.join(BASE, "results")
 EDA = os.path.join(BASE, "eda")

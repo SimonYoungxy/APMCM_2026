@@ -127,12 +127,27 @@ res["expected_responders"] = {
     for ct in CALL_TYPES}
 
 # ---------------------------------------------------------------- sensitivity
-# (a) recognition threshold 0.5 -> 0.6 / 0.7
-thr_sens = {}
+# (a) recognition correlation threshold applied to the SIGNAL FIDELITY F(d).
+#     The problem's "recognition criterion" is a statement about the correlation
+#     between the degraded and the original signal, so the correct place to move
+#     it 0.5 -> 0.6 -> 0.7 is the fidelity curve F(d), not the composite index.
+F_thr_sens = {}
 for lvl in [0.5, 0.6, 0.7]:
-    thr_sens[str(lvl)] = {ct: round(radius_of(ce_curves[ct], D_GRID, lvl), 1)
-                          for ct in CALL_TYPES}
-res["sensitivity_threshold"] = thr_sens
+    F_thr_sens[str(lvl)] = {}
+    for ct in CALL_TYPES:
+        ce, F, P = ce_curve(ct, D_GRID)
+        F_thr_sens[str(lvl)][ct] = round(radius_of(F, D_GRID, lvl), 1)
+res["sensitivity_recognition_threshold_on_F"] = F_thr_sens
+
+# (b) index decision threshold applied to the composite CE(d). This is a model
+#     convention (the 0.5 line on a weighted average of F and P), NOT the
+#     recognition criterion; it is kept separately and reported as an "index
+#     decision threshold".
+ce_thr_sens = {}
+for lvl in [0.5, 0.6, 0.7]:
+    ce_thr_sens[str(lvl)] = {ct: round(radius_of(ce_curves[ct], D_GRID, lvl), 1)
+                             for ct in CALL_TYPES}
+res["sensitivity_index_threshold_on_CE"] = ce_thr_sens
 
 # (b) global correlation reduction 5%-20%
 corr_sens = {}
@@ -142,6 +157,20 @@ for red in [0.0, 0.05, 0.10, 0.15, 0.20]:
         ce, _, _ = ce_curve(ct, D_GRID, corr_factor=1 - red)
         corr_sens[f"{int(red*100)}%"][ct] = round(radius_of(ce, D_GRID, 0.5), 1)
 res["sensitivity_correlation_reduction"] = corr_sens
+
+# percentage loss of radius under the two stress scenarios, derived from the stored
+# radii so that the paper can cite them directly instead of recomputing by hand
+res["radius_reduction_pct"] = {
+    "correlation_-20pct_on_CE": {
+        ct: round(100 * (ce_radius[ct] - corr_sens["20%"][ct]) / ce_radius[ct], 1)
+        for ct in CALL_TYPES},
+    "recognition_F_0.5_to_0.7": {
+        ct: round(100 * (F_thr_sens["0.5"][ct] - F_thr_sens["0.7"][ct])
+                  / F_thr_sens["0.5"][ct], 1) for ct in CALL_TYPES},
+    "index_threshold_0.5_to_0.7_on_CE": {
+        ct: round(100 * (ce_radius[ct] - ce_thr_sens["0.7"][ct]) / ce_radius[ct], 1)
+        for ct in CALL_TYPES},
+}
 
 # (c) weight on the signal component
 w_sens = {}
@@ -210,7 +239,8 @@ with open(os.path.join(RES, "q4.json"), "w", encoding="utf-8") as fh:
 print("Q4 done")
 print("CE radius", ce_radius)
 print("components", comp_radius)
-print("threshold sens", thr_sens)
+print("recognition threshold on F", F_thr_sens)
+print("index threshold on CE", ce_thr_sens)
 print("corr sens", corr_sens)
 print("weight sens", w_sens)
 print("expected responders", res["expected_responders"]["tv"])
