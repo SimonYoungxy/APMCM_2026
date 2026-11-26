@@ -37,11 +37,9 @@ Python 3.14 with the versions pinned in `env.txt`. Key packages:
 | scikit-posthocs | 0.18.0 | Dunn post-hoc tests |
 | matplotlib / seaborn | 3.11.2 / 0.13.2 | figures |
 
-Raw data path is set in `code/common.py`:
-
-```
-D:\Grade 2\数学建模\2026 APMCM Problems\2026 APMCM Problems\2026 APMCM Problem C\date
-```
+All paths are resolved relative to `code/common.py`, so the package runs from any
+directory. The raw data are bundled in `data/`; set the environment variable
+`APMCM_DATA` to point at another copy if needed.
 
 ## Reproduce every number in the paper
 
