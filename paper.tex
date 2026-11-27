@@ -246,7 +246,7 @@ $0.38$--$0.41$ for these contrasts.
 
 Figure~\ref{fig:clf} and Table~\ref{tab:clf} compare three feature sets under identical
 five-fold stratified cross-validation. With the six raw measures a random forest\cite{breiman} reaches
-$0.481$ accuracy, barely above the $0.407$ majority-class rate, and linear discriminant
+$0.481$ accuracy ($\pm0.09$ across folds), barely above the $0.407$ majority-class rate, and linear discriminant
 analysis and a radial-basis SVM do no better ($0.435$ and $0.472$). The three call types
 are therefore not separable by their gross spectral summary statistics.
 
@@ -255,7 +255,7 @@ expresses how spread out the energy is, while the peak-to-fundamental ratio
 $F_{\mathrm{peak}}/F_{01}$ and the median-to-fundamental ratio $Q_{50}/F_{01}$ express
 where the energy sits relative to the fundamental, which is the dimension along which a
 modulated or two-voice call should differ from a flat one. A random forest on these three
-measures reaches $0.639$ accuracy, a gain of $0.158$ over the raw set, with per-class F1
+measures reaches $0.639$ accuracy ($\pm0.13$ across folds), a gain of $0.158$ over the raw set, with per-class F1
 scores of $0.723$ (flat), $0.667$ (modulated) and $0.462$ (two-voice). Out-of-fold
 permutation importance is not even: the peak-to-fundamental ratio dominates ($0.205$
 decrease in held-out accuracy), the median-to-fundamental ratio follows ($0.131$), and
@@ -382,9 +382,10 @@ The dominant uncertainty is model form. Refitting the same thresholds under the 
 candidate decay shapes gives the bands in the last column of Table~\ref{tab:range}:
 $[67,95]$ m for flat calls, $[138,206]$ m for modulated calls and $[162,438]$ m for
 two-voice calls. The two-voice band is wide because the power law, which fits worst by
-AIC, extrapolates a long tail. We therefore quote ranges as intervals rather than point
-values, and we do not claim a precise distance for two-voice calls beyond saying that it
-exceeds that of the other two types by a substantial margin.
+AIC, extrapolates a long tail. The propagation data span $4$--$256$ m, so any radius above
+$256$ m is an extrapolation rather than a direct observation. We therefore quote ranges as
+intervals rather than point values, and we do not claim a precise distance for two-voice
+calls beyond saying that it exceeds that of the other two types by a substantial margin.
 
 \subsection{Reachability}
 
@@ -623,10 +624,10 @@ component radii alongside it, so no radius is read as a literal communication di
 
 The weights carry an ecological reading: $w_1$ weights the physical availability of the
 signal and $w_2$ the receiver's propensity to act on it. We set both to $0.5$ and test
-the choice below; the index radius moves by less than $6\%$ across the range
+the choice below; the index-based radius moves by less than $6\%$ across the range
 $w_1\in[0.3,0.7]$, so the qualitative ordering does not depend on this choice.
 
-We take the index radius
+We take the index-based radius
 $d^{\mathrm{CE}}_c=\min\{d:\mathrm{CE}_c(d)=0.5\}$ as a scenario-comparison summary. The
 component radii provide a diagnostic: if the signal radius is much smaller than the
 response radius, the limit is physical propagation; if the reverse, the limit is
@@ -636,7 +637,7 @@ behavioural.
 
 \subsection{Results}
 
-The index radius is $96$ m for flat calls, $158$ m for modulated calls and $203$ m for
+The index-based radius is $96$ m for flat calls, $158$ m for modulated calls and $203$ m for
 two-voice calls. The component decomposition explains the ordering. For flat calls the
 signal radius ($87$ m) is the binding constraint and the response radius ($116$ m) is
 larger, so the flat call is limited by propagation. For two-voice calls the situation is
@@ -653,7 +654,7 @@ threshold at $200$ m.
 \includegraphics[width=\textwidth]{figures/fig10_ce_index.png}
 \caption{Communication-effectiveness index (solid) and its two components (dashed: signal
 fidelity; dotted: response probability) as a function of distance. The vertical
-dash-dotted line marks the index radius at the $0.5$ threshold.}
+dash-dotted line marks the index-based radius at the $0.5$ threshold.}
 \label{fig:ce}
 \end{figure}
 
@@ -739,7 +740,7 @@ solutions of the fitted curves.
 \paragraph{Sensitivity.} For Question 2 the dominant uncertainties are sampling error
 (about $\pm1$--$4$ m, from whole-recording bootstrap) and model form (about $20$ m for
 flat calls, $50$ m for modulated calls and far more for two-voice calls). For Question 4
-the index radius moves
+the index-based radius moves
 by less than $6\%$ across a factor-of-two change in $w_1$, and by about $14$--$23\%$ under
 a $20\%$ global loss of correlation.
 
