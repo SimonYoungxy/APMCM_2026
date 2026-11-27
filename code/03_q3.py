@@ -195,44 +195,6 @@ for tp in ["call", "control"]:
 res["multinomial_nbehaviour"] = mn_res
 res["ordinal_nbehaviour"] = po
 
-# ------------------------------------------------ 3b. response intensity
-# vocalisation count: a zero-inflated count, modelled with NB2 and two covariates
-Xd = pd.DataFrame({"const": 1.0,
-                   "call": (d.Type == "call").astype(float).to_numpy(),
-                   "log_dist": d["log_dist"].to_numpy()})
-nb = sm.NegativeBinomial(d["VocalNcalls"].astype(float), Xd).fit(disp=False, maxiter=500)
-ci = nb.conf_int()
-res["vocal_calls_model"] = {
-    "model": "negative binomial NB2",
-    "n": int(len(d)),
-    "zeros": int((d.VocalNcalls == 0).sum()),
-    "zero_share_call": round(float((d.loc[d.Type == "call", "VocalNcalls"] == 0).mean()), 4),
-    "zero_share_control": round(float((d.loc[d.Type == "control", "VocalNcalls"] == 0).mean()), 4),
-    "mean_call": round(float(d.loc[d.Type == "call", "VocalNcalls"].mean()), 3),
-    "mean_control": round(float(d.loc[d.Type == "control", "VocalNcalls"].mean()), 3),
-    "alpha": round(float(nb.params.iloc[-1]), 4),
-    "terms": {str(k): {"coef": round(float(nb.params[k]), 4),
-                       "IRR": round(float(np.exp(nb.params[k])), 3),
-                       "CI95": [round(float(np.exp(ci.loc[k, 0])), 3),
-                                round(float(np.exp(ci.loc[k, 1])), 3)],
-                       "p": round(float(nb.pvalues[k]), 4)}
-              for k in ["call", "log_dist"]},
-    "aic": round(float(nb.aic), 2),
-}
-
-# durations are recorded as zero when the behaviour did not occur, so they are
-# summarised only among trials in which the behaviour was observed
-dur_desc = {}
-for c in ["HeadsUpDuration", "ApproachDuration"]:
-    ev = d[d[c] > 0]
-    dur_desc[c] = {"n_events": int(len(ev)),
-                   "by_type": {t: {"n": int(len(g)),
-                                   "median": round(float(g[c].median()), 1),
-                                   "q1": round(float(g[c].quantile(.25)), 1),
-                                   "q3": round(float(g[c].quantile(.75)), 1)}
-                               for t, g in ev.groupby("Type")}}
-res["duration_descriptives"] = dur_desc
-
 # distribution of the eight combinations
 combo = d.groupby(["Type", "HeadsUpYesNo", "VocalYesNo", "ApproachYesNo"]).size()
 res["combination_counts"] = {str(k): int(v) for k, v in combo.items()}
@@ -358,6 +320,85 @@ for ct in ["control"] + CALL_TYPES:
 res["predicted_latency_table"] = pred_rows
 res["predicted_latency_meta"] = {"npenguins": np_med,
                                  "horizon_s": round(max_obs, 2)}
+
+# ------------------------------------------------ 6. response-intensity measures
+# VocalNcalls (count) -> negative binomial on all trials (matches the paper's IRR);
+# HeadsUpDuration (duration) -> Gamma GLM on the head-raising subset;
+# ApproachDuration -> descriptive only (23 events, all in the natural-call group).
+from statsmodels.discrete.discrete_model import NegativeBinomial
+
+intensity = {}
+vcall = (d.Type == "call").astype(float).to_numpy()
+Xv = pd.DataFrame({"const": 1.0, "call": vcall, "log_dist": d["log_dist"].to_numpy()})
+
+vocal_int = {"n": int(len(d)),
+             "zero_fraction": round(float((d.VocalNcalls == 0).mean()), 4),
+             "zero_share_by_type": {
+                 t: round(float((d.loc[d.Type == t, "VocalNcalls"] == 0).mean()), 4)
+                 for t in ["call", "control"]},
+             "descriptive": {
+                 t: {"n_nonzero": int((d.loc[d.Type == t, "VocalNcalls"] > 0).sum()),
+                     "median_given_vocal": round(float(d.loc[(d.Type == t) & (d.VocalNcalls > 0),
+                                                            "VocalNcalls"].median()), 3)}
+                 for t in ["call", "control"]}}
+try:
+    nb = NegativeBinomial(d["VocalNcalls"].to_numpy(float), Xv).fit(disp=False, maxiter=1000)
+    vocal_int["model"] = "negative binomial"
+    vocal_int["coef"] = {str(k): round(float(v), 4)
+                         for k, v in zip(nb.params.index, nb.params)}
+    vocal_int["pvalues"] = {str(k): round(float(v), 4)
+                            for k, v in zip(nb.pvalues.index, nb.pvalues)}
+    vocal_int["irr"] = {str(k): round(float(np.exp(nb.params[k])), 3)
+                        for k in nb.params.index}
+    _ci = nb.conf_int()
+    vocal_int["irr_ci95"] = {k: [round(float(np.exp(_ci.loc[k, 0])), 3),
+                                 round(float(np.exp(_ci.loc[k, 1])), 3)]
+                             for k in ["call", "log_dist"] if k in _ci.index}
+    vocal_int["aic"] = round(float(nb.aic), 2)
+except Exception:
+    vsub = d[d.VocalNcalls > 0].copy()
+    U, p = stats.mannwhitneyu(vsub.loc[vsub.Type == "call", "VocalNcalls"],
+                              vsub.loc[vsub.Type == "control", "VocalNcalls"],
+                              alternative="two-sided")
+    vocal_int["model"] = "descriptive + Mann-Whitney (NB failed)"
+    vocal_int["mannwhitney_U"] = round(float(U), 2)
+    vocal_int["mannwhitney_p"] = round(float(p), 4)
+intensity["VocalNcalls"] = vocal_int
+
+# HeadsUpDuration (Gamma GLM, log link) on the 68 head-raising trials
+hu = d[d.HeadsUpYesNo == 1].copy()
+hu_int = {"n_headraising": int(len(hu)),
+          "descriptive": {t: {"n": int((hu.Type == t).sum()),
+                              "median": round(float(hu.loc[hu.Type == t, "HeadsUpDuration"].median()), 2),
+                              "q1": round(float(hu.loc[hu.Type == t, "HeadsUpDuration"].quantile(.25)), 2),
+                              "q3": round(float(hu.loc[hu.Type == t, "HeadsUpDuration"].quantile(.75)), 2),
+                              "mean": round(float(hu.loc[hu.Type == t, "HeadsUpDuration"].mean()), 2)}
+                          for t in ["call", "control"]}}
+try:
+    hu_X = pd.DataFrame({"const": 1.0, "call": (hu.Type == "call").astype(float).to_numpy(),
+                         "log_dist": hu["log_dist"].to_numpy(),
+                         "Npenguins": hu["Npenguins"].to_numpy(float)})
+    gam = sm.GLM(hu["HeadsUpDuration"].to_numpy(float), hu_X,
+                 family=sm.families.Gamma(link=sm.families.links.log())).fit()
+    hu_int["model"] = "Gamma GLM (log link)"
+    hu_int["coef"] = {str(k): round(float(v), 4) for k, v in zip(gam.params.index, gam.params)}
+    hu_int["pvalues"] = {str(k): round(float(v), 4) for k, v in zip(gam.pvalues.index, gam.pvalues)}
+    hu_int["exp_coef_call"] = round(float(np.exp(gam.params["call"])), 3)
+except Exception as e:
+    hu_int["model"] = "descriptive (Gamma GLM failed: %s)" % str(e)
+intensity["HeadsUpDuration"] = hu_int
+
+# ApproachDuration (descriptive only)
+ap = d[d.ApproachYesNo == 1]
+intensity["ApproachDuration"] = {
+    "n": int(len(ap)),
+    "note": "descriptive only: 23 events, all in natural-call trials (separation)",
+    "median": round(float(ap["ApproachDuration"].median()), 2),
+    "mean": round(float(ap["ApproachDuration"].mean()), 2),
+    "min": float(ap["ApproachDuration"].min()),
+    "max": float(ap["ApproachDuration"].max()),
+}
+res["response_intensity"] = intensity
 
 # ------------------------------------------------ figures
 # fig07 response rate by distance bin / call type

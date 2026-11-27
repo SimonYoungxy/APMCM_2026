@@ -88,19 +88,16 @@ remains recognisable, (iii) how penguins respond behaviourally and how quickly, 
 how the two combine into an operational measure of communication effectiveness that can
 inform conservation.
 
-The central methodological difficulty is not the modelling itself but the data
-structure. The acoustic table contains variables that are observed only for some call
-types because the underlying vocal mechanism differs, and the playback table contains a
-behaviour with only $23$ events spread over thirteen playback distances. Both facts
-constrain what can legitimately be estimated. We therefore organise the paper around
-explicit estimability checks: a leakage audit for the classifier, an events-per-variable
-budget for every regression, and an explicit reachability rule for the inverse problem
-of turning a correlation threshold into a distance.
+The central difficulty is the data structure, not the modelling. Some acoustic variables
+are observed only for certain call types because the vocal mechanism differs, and one
+playback behaviour has only $23$ events over thirteen distances, which constrains what can
+be estimated. The paper is therefore organised around explicit estimability checks: a
+leakage audit, an events-per-variable budget, and a reachability rule for turning a
+correlation threshold into a distance.
 
-Section~\ref{sec:data} audits the data and fixes the modelling conventions.
-Sections~\ref{sec:q1}--\ref{sec:q4} answer the four questions in order.
-Section~\ref{sec:eval} collects the validation and sensitivity analyses,
-Section~\ref{sec:concl} concludes, and the appendix reproduces the code.
+Section~\ref{sec:data} audits the data; Sections~\ref{sec:q1}--\ref{sec:q4} answer the
+four questions; Section~\ref{sec:eval} collects validation and sensitivity analyses, and
+the appendix reproduces the code.
 
 %=====================================================================
 \section{Data audit and modelling conventions}\label{sec:data}
@@ -108,41 +105,34 @@ Section~\ref{sec:concl} concludes, and the appendix reproduces the code.
 \subsection{What the data contain}
 
 Table~\ref{tab:audit} summarises the three sources. Two features of the acoustic table
-dominate everything that follows. First, the second fundamental frequency $F_{02}$ is
-recorded for all $24$ two-voice calls and for none of the $84$ flat or modulated calls.
-Second, the pulse rate is never recorded for flat calls and is missing for six modulated
-and four two-voice calls. Neither pattern is a data-management failure: a continuous
-flat call has no pulse structure, and a call with a single fundamental has no second
-fundamental. These are structural, type-defining absences.
+dominate: the second fundamental $F_{02}$ is recorded for all $24$ two-voice calls and none
+of the $84$ flat or modulated calls, and the pulse rate is never recorded for flat calls
+(and is missing for six modulated and four two-voice calls). Neither pattern is a
+data-management failure---a continuous flat call has no pulse, and a single-fundamental
+call has no second fundamental. These are structural, type-defining absences.
 
-The playback table is balanced between $139$ natural-call trials and $139$ control
-trials, but the outcome counts are far from balanced: $68$ head-raising events, $81$
-vocalising events and only $23$ approaching events. Thirteen playback distances are
-represented, but the distance-by-call-type cross-tabulation contains nine empty cells,
-so any interaction between stimulus type and distance is inestimable and is excluded by
-construction.
+The playback table is balanced ($139$ natural-call and $139$ control trials) but the
+outcomes are not: $68$ head-raising, $81$ vocalising and only $23$ approaching events.
+Thirteen distances are represented, but the distance-by-call-type table has nine empty
+cells, so the interaction is inestimable and is excluded by construction.
 
-The nine propagation files each contain $300$ paired correlation values at seven
-distances. They contain $1350$ missing cells out of $18\,900$ ($7.1\%$), and the missing
-fraction differs by call type, so a naive listwise deletion would silently change the
-composition of each distance bin. Every cell mean is therefore computed from the values
-that are actually present, and the per-cell sample sizes are carried through into the
-weighted fits.
+The nine propagation files each contain $300$ paired correlations at seven distances, with
+$1350$ missing cells out of $18\,900$ ($7.1\%$); the missing fraction differs by call type,
+so listwise deletion would silently change each distance bin. Cell means therefore use the
+values actually present, with per-cell sample sizes carried into the weighted fits.
 
 \subsection{Two conventions that protect the conclusions}
 
 \paragraph{Leakage control.} Because $F_{02}$ and the pulse rate are definitional, any
-classifier that uses them is not measuring acoustic separation. We enforce three nested
-feature sets: six raw measures that are complete for all $108$ calls; three engineered
-measures built from those six; and a deliberately contaminated set that adds the
-structural flags. The third set is reported only as a leakage audit. It is never used as
-a substantive model.
+classifier using them is not measuring acoustic separation. We enforce three nested
+feature sets---six complete raw measures, three engineered measures, and a deliberately
+contaminated set that adds the structural flags---the third reported only as a leakage
+audit, never as a substantive model.
 
-\paragraph{Estimability budget.} For every binary or time-to-event model we record the
-number of events and the number of covariates, and we require at least ten events per
-covariate\cite{peduzzi,austin}. This rule is applied before fitting, not after, and it is what forces the
-approach behaviour to be analysed with a single covariate and the latency models to use
-no more than two.
+\paragraph{Estimability budget.} Every binary or time-to-event model records events and
+covariates and requires at least ten events per covariate\cite{peduzzi,austin}; applied before
+fitting, this forces the approach behaviour to one covariate and the latency models to no
+more than two.
 
 \input{tables/tab01_audit}
 
@@ -150,21 +140,17 @@ no more than two.
 \section{Assumptions}
 
 \begin{enumerate}[label=\textbf{A\arabic*.},leftmargin=*]
-\item Recordings at one metre are taken as the undistorted reference signal, so a
-correlation of one with itself defines perfect fidelity. All subsequent fidelity values
-are relative to this reference.
-\item The seven propagation distances are representative of the shallow coastal water in
-which the penguins forage, and no additional site-specific absorption term is required
-beyond what the fitted decay curves absorb.
-\item A measured latency is the delay between stimulus onset and the first occurrence of
-the behaviour; a trial in which the behaviour is not recorded is censored at the
-observation window rather than treated as a failure of perception.
-\item Playback trials are treated as independent. Given that $139$ of the $278$ trials
-use a natural call and each trial has its own identifier, this is reasonable, but it
-ignores possible repeated sampling of the same individuals and is discussed in
-Section~\ref{sec:eval}.
-\item The three call types are treated as fixed categories, as recorded, rather than as
-points on a continuum.
+\item Recordings at one metre are the undistorted reference, so a correlation of one with
+itself defines perfect fidelity; all fidelity values are relative to it.
+\item The seven propagation distances are representative of the penguins' shallow coastal
+foraging habitat, with no additional site-specific absorption term.
+\item A latency is the delay from stimulus onset to the first occurrence of a behaviour; a
+trial without the behaviour is censored, not treated as a failure of perception.
+\item Because individual identities and group clustering are unavailable, playback trials
+are treated as independent as a working approximation; the standard errors may be
+anti-conservative if the same individuals or groups were repeatedly sampled
+(Section~\ref{sec:eval}).
+\item The three call types are treated as fixed categories.
 \end{enumerate}
 
 %=====================================================================
@@ -182,9 +168,6 @@ $r_{m}(d)$ & mean correlation at distance $d$ for metric $m$\\
 $F_c(d)$ & acoustic fidelity index of call type $c$ at distance $d$\\
 $\theta_c$ & recognition threshold on $F_c$\\
 $d^{*}_{c}(\theta)$ & effective range: smallest $d$ with $F_c(d)=\theta$\\
-$y_i$ & binary response indicator of playback trial $i$\\
-$n_i$ & number of penguins observed in trial $i$\\
-$S(t)$ & survival function of the response latency\\
 $\mathrm{CE}_c(d)$ & communication-effectiveness index\\
 $k$ & number of covariates in a regression\\
 \bottomrule
@@ -210,7 +193,7 @@ missingness itself.
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[width=\textwidth]{figures/fig01_boxplots.png}
+\includegraphics[width=0.86\textwidth]{figures/fig01_boxplots.png}
 \caption{Distributions of the six complete acoustic measures by call type. Points are
 individual calls, boxes the interquartile range, and the title of each panel gives the
 Kruskal--Wallis $p$ value ($^{***}p<0.001$, $^{**}p<0.01$, $^{*}p<0.05$, n.s.\ not
@@ -220,7 +203,7 @@ significant).}
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[width=\textwidth]{figures/fig02_violin_profile.png}
+\includegraphics[width=0.9\textwidth]{figures/fig02_violin_profile.png}
 \caption{Left: violin plots of the six measures, each standardised within its own feature
 so that all six can share one axis, with quartiles marked. Right: median feature profile
 of each call type normalised by the grand median, which shows that the three types differ
@@ -337,7 +320,7 @@ is the first thing that a propagating wavefront loses.
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[width=\textwidth]{figures/fig04_correlation_decay.png}
+\includegraphics[width=0.86\textwidth]{figures/fig04_correlation_decay.png}
 \caption{Mean correlation with the one-metre recording as a function of propagation
 distance, for the three metrics and the three call types. Note the logarithmic distance
 axis.}
@@ -549,20 +532,17 @@ by stimulus type.}
 \subsection{Response intensity}
 
 Beyond whether a behaviour occurs, the data record how often and for how long.
-Vocalisation count is a zero-inflated count ($193$ of $278$ trials record none), and a
-negative binomial model with stimulus type and log-distance fits it well: natural calls
-multiply the expected count by $13.0$ ($95\%$ CI $[7.3,23.0]$, $p<10^{-3}$) while distance
-is not significant (IRR $2.04$, $[0.81,5.11]$, $p=0.13$). The zero share is $43.9\%$
-under natural calls against $95.0\%$ under controls, so the stimulus acts mainly on
-whether birds call at all rather than on how much they call.
+Vocalisation count is a zero-inflated count ($193$ of $278$ trials record none); a
+negative binomial model with stimulus type and log-distance gives an incidence-rate ratio
+of $13.0$ ($[7.3,23.0]$, $p<10^{-3}$), distance being non-significant ($2.04$,
+$[0.81,5.11]$, $p=0.13$). The zero share is $43.9\%$ under natural calls against $95.0\%$
+under controls, so the stimulus acts mainly on whether birds call at all.
 
-Durations are recorded as zero when the behaviour does not occur and are therefore
-summarised only over trials in which it did. Head raising lasts a median of $22.0$ s
-(IQR $14.0$--$34.5$) under natural calls against $12.0$ s ($11.0$--$18.0$) under
-controls. Approaching lasts a median of $32.0$ s ($26.0$--$60.0$), but all $23$ approach
-events fall in natural-call trials, so no between-stimulus comparison is estimable; we
-report the distribution descriptively rather than fit a model that complete separation
-would render uninterpretable.
+Durations are summarised only over trials in which the behaviour occurred. Head raising
+lasts a median of $22.0$ s ($14.0$--$34.5$) under natural calls against $12.0$ s
+($11.0$--$18.0$) under controls, a Gamma model giving a stimulus effect of $1.57$
+($p=0.014$). Approaching lasts a median of $32.0$ s ($26.0$--$60.0$), all $23$ events
+falling in natural-call trials, so only a descriptive summary is reported.
 
 \subsection{Response latency as a censored outcome}
 
@@ -585,7 +565,7 @@ vocalising ratio between $21.7$ and $26.9$; the effect remains strongly positive
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[width=\textwidth]{figures/fig09_km_latency.png}
+\includegraphics[width=0.9\textwidth]{figures/fig09_km_latency.png}
 \caption{Kaplan--Meier curves of the time to each response behaviour, natural calls
 against control sounds. Non-responses are right-censored at the observation window.}
 \label{fig:km}
@@ -815,37 +795,27 @@ faster to natural calls (hazard ratio $4.9$) and vocalising responds much faster
 ratio $21.7$). All $23$ approach events occurred in natural-call trials, so that effect
 is a qualitative separation rather than an estimable odds ratio.
 
-\item The communication-effectiveness index gives radii of $96$, $158$ and $203$ m for
-flat, modulated and two-voice calls, falling to $34$, $76$ and $98$ m under a strict
-$0.7$ recognition threshold; the ranking is stable under every scenario tested.
+\item The index gives radii of $96$, $158$ and $203$ m, falling to $34$, $76$ and $98$ m
+at a strict $0.7$ threshold; the ranking is stable.
 
-\item For conservation, the effective acoustic range of this species is on the order of
-one to two hundred metres in typical coastal water, not kilometres, and it depends
-strongly on the recognition criterion adopted; management that assumes a larger range is
-optimistic.
+\item The effective acoustic range is on the order of one to two hundred metres, not
+kilometres, and depends strongly on the recognition criterion.
 \end{enumerate}
 
 %=====================================================================
 \section*{Recommendations for conservation practice}
 \addcontentsline{toc}{section}{Recommendations for conservation practice}
 
-\emph{Protect the near-field acoustic channel around foraging aggregations.} The weakest
-call type carries less than $100$ m even at a permissive threshold, so broadband vessel
-noise within a few hundred metres can mask communication for the whole group; a roughly
-$200$ m exclusion radius around active aggregations is consistent with the two-voice
-radius.
+\emph{Protect the near-field acoustic channel.} The weakest call type carries less than
+$100$ m, so broadband vessel noise within a few hundred metres can mask the whole group; a
+roughly $200$ m exclusion radius is consistent with the two-voice radius.
 
-\emph{Treat passive acoustic monitoring as a short-range tool.} Monitoring that assumes
-detection at kilometres will underestimate occupancy; with a potential-recognition range of
+\emph{Treat passive acoustic monitoring as a short-range tool.} With a range of
 $87$--$192$ m, hydrophones should be spaced in hundreds of metres, not kilometres.
 
-\emph{Prioritise masking reduction over source removal.} A $20\%$ global correlation loss
-costs $14$--$23\%$ of range, whereas raising the recognition threshold from $0.5$ to
-$0.7$ costs $49$--$62\%$; reducing impulsive noise during peak foraging is
-therefore likely more effective than blanket noise limits.
-
-These recommendations rest on a small observational sample from one region and are
-order-of-magnitude guidance until replicated with marked birds.
+\emph{Prioritise masking reduction.} A $20\%$ correlation loss costs $14$--$23\%$ of range
+and a $0.7$ threshold costs $49$--$62\%$; reducing impulsive noise at peak foraging is
+likely more effective than blanket limits.
 
 %=====================================================================
 \begin{thebibliography}{9}

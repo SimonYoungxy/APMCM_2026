@@ -566,67 +566,6 @@
     "mnlogit_aic": 473.172,
     "assumption_met": false
   },
-  "vocal_calls_model": {
-    "model": "negative binomial NB2",
-    "n": 278,
-    "zeros": 193,
-    "zero_share_call": 0.4388,
-    "zero_share_control": 0.9496,
-    "mean_call": 2.129,
-    "mean_control": 0.173,
-    "alpha": 2.6159,
-    "terms": {
-      "call": {
-        "coef": 2.5636,
-        "IRR": 12.982,
-        "CI95": [
-          7.323,
-          23.016
-        ],
-        "p": 0.0
-      },
-      "log_dist": {
-        "coef": 0.7112,
-        "IRR": 2.037,
-        "CI95": [
-          0.811,
-          5.111
-        ],
-        "p": 0.1298
-      }
-    },
-    "aic": 659.76
-  },
-  "duration_descriptives": {
-    "HeadsUpDuration": {
-      "n_events": 68,
-      "by_type": {
-        "call": {
-          "n": 55,
-          "median": 22.0,
-          "q1": 14.0,
-          "q3": 34.5
-        },
-        "control": {
-          "n": 13,
-          "median": 12.0,
-          "q1": 11.0,
-          "q3": 18.0
-        }
-      }
-    },
-    "ApproachDuration": {
-      "n_events": 23,
-      "by_type": {
-        "call": {
-          "n": 23,
-          "median": 32.0,
-          "q1": 26.0,
-          "q3": 60.0
-        }
-      }
-    }
-  },
   "combination_counts": {
     "('call', 0, 0, 0)": 49,
     "('call', 0, 0, 1)": 1,
@@ -961,5 +900,96 @@
   "predicted_latency_meta": {
     "npenguins": 8.0,
     "horizon_s": 10.0
+  },
+  "response_intensity": {
+    "VocalNcalls": {
+      "n": 278,
+      "zero_fraction": 0.6942,
+      "zero_share_by_type": {
+        "call": 0.4388,
+        "control": 0.9496
+      },
+      "descriptive": {
+        "call": {
+          "n_nonzero": 78,
+          "median_given_vocal": 3.0
+        },
+        "control": {
+          "n_nonzero": 7,
+          "median_given_vocal": 2.0
+        }
+      },
+      "model": "negative binomial",
+      "coef": {
+        "const": -3.1037,
+        "call": 2.5636,
+        "log_dist": 0.7112,
+        "alpha": 2.6159
+      },
+      "pvalues": {
+        "const": 0.0008,
+        "call": 0.0,
+        "log_dist": 0.1298,
+        "alpha": 0.0
+      },
+      "irr": {
+        "const": 0.045,
+        "call": 12.982,
+        "log_dist": 2.037,
+        "alpha": 13.68
+      },
+      "irr_ci95": {
+        "call": [
+          7.323,
+          23.016
+        ],
+        "log_dist": [
+          0.811,
+          5.111
+        ]
+      },
+      "aic": 659.76
+    },
+    "HeadsUpDuration": {
+      "n_headraising": 68,
+      "descriptive": {
+        "call": {
+          "n": 55,
+          "median": 22.0,
+          "q1": 14.0,
+          "q3": 34.5,
+          "mean": 26.13
+        },
+        "control": {
+          "n": 13,
+          "median": 12.0,
+          "q1": 11.0,
+          "q3": 18.0,
+          "mean": 14.69
+        }
+      },
+      "model": "Gamma GLM (log link)",
+      "coef": {
+        "const": 2.5276,
+        "call": 0.4495,
+        "log_dist": 0.2815,
+        "Npenguins": -0.0311
+      },
+      "pvalues": {
+        "const": 0.0,
+        "call": 0.0144,
+        "log_dist": 0.1455,
+        "Npenguins": 0.0047
+      },
+      "exp_coef_call": 1.567
+    },
+    "ApproachDuration": {
+      "n": 23,
+      "note": "descriptive only: 23 events, all in natural-call trials (separation)",
+      "median": 32.0,
+      "mean": 38.13,
+      "min": 15.0,
+      "max": 60.0
+    }
   }
 }
