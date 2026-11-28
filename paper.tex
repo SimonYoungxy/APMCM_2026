@@ -778,18 +778,16 @@ remains a modelling choice.
 \section{Conclusions}\label{sec:concl}
 
 \begin{enumerate}[label=\textbf{(\arabic*)},leftmargin=*]
-\item Of the six comparable acoustic measures, peak frequency, the first fundamental and
-the median frequency differ at the nominal $5\%$ level, but only the first two survive a
-Benjamini--Hochberg correction across the six tests; effect sizes are small
-($\varepsilon^2\le0.10$). The apparent ease of separating the call types is an artefact of
-definitional variables: a classifier using them reaches $0.944$, while acoustic shape alone
-reaches $0.639$.
+\item Of the six comparable measures, peak frequency, the first fundamental and the
+median frequency differ at the nominal $5\%$ level, but only the first two survive a
+Benjamini--Hochberg correction; effect sizes are small ($\varepsilon^2\le0.10$). The
+apparent separability is definitional: a classifier using the structural flags reaches
+$0.944$, while acoustic shape alone reaches $0.639$.
 
-\item Acoustic fidelity falls from about $0.8$ at $4$ m to between $0.18$ and $0.28$ at
-$256$ m. Effective ranges at the potential-recognition tier are $87$, $156$ and $192$ m
-for flat, modulated and two-voice calls, with model-form bands of $[67,95]$,
-$[138,206]$ and $[162,438]$ m. Two-voice calls are the most robust carrier at every
-distance and every threshold.
+\item Acoustic fidelity falls from about $0.8$ at $4$ m to $0.18$--$0.28$ at $256$ m.
+Effective ranges at the potential-recognition tier are $87$, $156$ and $192$ m for flat,
+modulated and two-voice calls, with model-form bands of $[67,95]$, $[138,206]$ and
+$[162,438]$ m; two-voice calls are the most robust carrier at every distance and threshold.
 
 \item Natural calls raise the response rate from $12.9\%$ to $64.8\%$; response
 probability falls with distance and, weakly, with group size. Head raising responds
@@ -800,38 +798,44 @@ is a qualitative separation rather than an estimable odds ratio.
 \item The index gives radii of $96$, $158$ and $203$ m, falling to $34$, $76$ and $98$ m
 at a strict $0.7$ threshold; the ranking is stable.
 
-\item The effective acoustic range is on the order of one to two hundred metres, not
-kilometres, and depends strongly on the recognition criterion.
+\item The effective range is one to two hundred metres, not kilometres, and depends
+strongly on the recognition criterion.
 \end{enumerate}
 
 %=====================================================================
 \section*{Recommendations for conservation practice}
 \addcontentsline{toc}{section}{Recommendations for conservation practice}
 
-\emph{Protect the near-field acoustic channel.} The weakest call type carries less than
-$100$ m, so broadband vessel noise within a few hundred metres can mask the whole group; a
-roughly $200$ m exclusion radius is consistent with the two-voice radius.
+\emph{Protect the near-field acoustic channel.} The weakest call type carries under
+$100$ m, so broadband vessel noise within a few hundred metres can mask the group; a
+$200$ m exclusion radius matches the two-voice radius.
 
-\emph{Treat passive acoustic monitoring as a short-range tool.} With a range of
+\emph{Treat passive acoustic monitoring as a short-range tool.} With ranges of
 $87$--$192$ m, hydrophones should be spaced in hundreds of metres, not kilometres.
 
 \emph{Prioritise masking reduction.} A $20\%$ correlation loss costs $14$--$23\%$ of range
 and a $0.7$ threshold costs $49$--$62\%$; reducing impulsive noise at peak foraging is
 likely more effective than blanket limits.
 
-\emph{Improve the design of future playback experiments.} Approach behaviour is too rare
-($23$ events, all under natural calls) to estimate a stimulus effect, so future trials
-should enlarge the approach sample and extend observation time. The distance-by-call-type
-design has nine empty cells, so a complete $4\times13$ crossing should be planned; the
-observation window and ambient noise should be logged explicitly, and individual IDs
-recorded to allow repeated-measures modelling.
+\emph{Improve the design of future playback experiments.} Approach is too rare ($23$
+events, all under natural calls) to estimate a stimulus effect, so future trials should
+enlarge the approach sample and extend observation time. The design has nine empty cells,
+so a complete $4\times13$ crossing should be planned, with the observation window and
+ambient noise logged explicitly and individual IDs recorded for repeated-measures
+modelling.
 
-These recommendations assume typical shallow-coastal noise and moderate group sizes; the
-$200$ m radius is the most optimistic (two-voice) case and overstates the range in noisier
-conditions or smaller groups.
+These assume typical shallow-coastal noise and moderate group sizes; $200$ m is the
+optimistic two-voice case and overstates noisier or smaller-group conditions.
+%=====================================================================
+\paragraph{AI tool usage.} AI tools assisted with code implementation and manuscript
+drafting; every model, result and conclusion was re-derived, checked against the raw data
+by the team and corrected where necessary. Tools are listed in the references.
 
 %=====================================================================
-\begin{thebibliography}{9}
+\makeatletter
+\renewcommand{\@openbib@code}{\setlength{\itemsep}{0pt}}
+\makeatother
+\begin{thebibliography}{99}
 \bibitem{kruskal} Kruskal W H, Wallis W A. Use of ranks in one-criterion variance
 analysis[J]. Journal of the American Statistical Association, 1952, 47(260): 583-621.
 \bibitem{dunn} Dunn O J. Multiple comparisons using rank sums[J]. Technometrics, 1964,
@@ -852,6 +856,7 @@ Epidemiology, 1996, 49(12): 1373-1379.
 \bibitem{austin} Austin P C, Steyerberg E W. Events per variable (EPV) and the relative
 performance of different strategies for estimating the out-of-sample validity of logistic
 regression models[J]. Statistical Methods in Medical Research, 2017, 26(2): 796-808.
+\bibitem{aitool} TRAE IDE AI coding assistant, ByteDance, 2026-11-26 to 2026-11-28.
 \end{thebibliography}
 
 %=====================================================================
