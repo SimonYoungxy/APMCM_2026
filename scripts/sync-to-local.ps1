@@ -56,7 +56,8 @@ function Copy-Dir($name) {
 }
 
 # root-level sources
-foreach ($f in @("paper.tex", "ControlSheet.tex", "apmcmthesis.cls",
+foreach ($f in @("paper.tex", "ControlSheet.tex", "AI_Tool_Usage_Details.tex",
+                 "apmcmthesis.cls",
                  "apmcmthesis.cfg", "requirements.txt", "env.txt")) {
     Copy-One (Join-Path $Repo $f) $Target $null
 }
@@ -65,6 +66,7 @@ foreach ($f in @("paper.tex", "ControlSheet.tex", "apmcmthesis.cls",
 Copy-One (Join-Path $Repo "paper.pdf") $Target "paper.pdf"
 Copy-One (Join-Path $Repo "paper.pdf") $Target "Capmcm263XXXXX.pdf"
 Copy-One (Join-Path $Repo "ControlSheet.pdf") $Target $null
+Copy-One (Join-Path $Repo "AI_Tool_Usage_Details.pdf") $Target "AI-Tool-Usage-Details.pdf"
 
 # generated / analytical directories
 foreach ($d in @("code", "results", "eda", "figures", "tables")) {
