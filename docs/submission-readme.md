@@ -8,7 +8,7 @@ communication range.
 ```
 APMCM2026_C/
 ├── paper.tex            main paper (official apmcmthesis class, pdflatex)
-├── paper.pdf            compiled paper  (48 pages: 25 body incl. references + code appendix)
+├── paper.pdf            compiled paper  (51 pages: 25 body incl. references + code appendix)
 ├── ControlSheet.tex     control sheet (fill team number, then print and sign)
 ├── ControlSheet.pdf     printable control sheet
 ├── apmcmthesis.cls      official class file (do not edit)
@@ -86,10 +86,10 @@ Two statements are worth checking explicitly because they are the core of the an
 
 ## Before submission
 
-1. Replace `apmcm263XXXXX` in `paper.tex` and `ControlSheet.tex` with the real team number
+1. Replace `apmcm26311695` in `paper.tex` and `ControlSheet.tex` with the real team number
    (three places: `\baominghao`, and the header is generated automatically).
 2. Fill school, member names and supervisor in `ControlSheet.tex`, recompile, print and
-   sign it, then scan to `Capmcm263XXXXXcns.pdf`.
-3. Rename `paper.pdf` to `Capmcm263XXXXX.pdf`.
+   sign it, then scan to `Capmcm26311695cns.pdf`.
+3. Rename `paper.pdf` to `Capmcm26311695.pdf`.
 4. Keep the header free of names and institutions; the main body must stay at or below
    25 pages (currently 25).

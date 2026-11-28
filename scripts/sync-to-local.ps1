@@ -64,7 +64,7 @@ foreach ($f in @("paper.tex", "ControlSheet.tex", "AI_Tool_Usage_Details.tex",
 
 # compiled artefacts
 Copy-One (Join-Path $Repo "paper.pdf") $Target "paper.pdf"
-Copy-One (Join-Path $Repo "paper.pdf") $Target "Capmcm263XXXXX.pdf"
+Copy-One (Join-Path $Repo "paper.pdf") $Target "Capmcm26311695.pdf"
 Copy-One (Join-Path $Repo "ControlSheet.pdf") $Target $null
 Copy-One (Join-Path $Repo "AI_Tool_Usage_Details.pdf") $Target "AI-Tool-Usage-Details.pdf"
 
