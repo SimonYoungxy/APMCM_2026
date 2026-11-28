@@ -21,12 +21,15 @@ Tool & Version / model & Development organisation and dates \\
 \hline
 AI coding assistant (IDE-integrated) & TRAE IDE, integrated large language model &
 ByteDance, 2026-11-26 to 2026-11-28 \\
+Math modelling agent & mathmodel, deepseek-v4-pro & DeepSeek,
+2026-11-26 to 2026-11-28 \\
 \hline
 \end{tabular}
 \end{center}
 
-No other AI system, code-completion plug-in, translation engine or automated mathematical
-software was used in producing this paper or its supporting materials.
+Both systems were used as assistive aids only. No AI tool was used to generate data,
+references, numerical results or conclusions, and no other AI system, code-completion
+plug-in or translation engine was used.
 
 \section*{2. Purpose and stages of use}
 
@@ -77,9 +80,12 @@ review include, but are not limited to:
 \item \textbf{Paired structure of the playback data.} The trials are 139 matched
 natural-call/control pairs (identical date, context, distance and group size). The draft
 used an independent two-sample test for the overall response rate. The team required a
-matched analysis instead; a McNemar test on the paired table and cluster-robust standard
-errors were added, and the assumption text was rewritten to state that clustering is
-available and has been modelled.
+matched analysis instead; McNemar's test on the paired table was added to the pipeline and
+is now reported ($\chi^2=66.33$, $p=3.8\times10^{-16}$, paired odds ratio $37.0$), and the
+assumption text was rewritten to state that pairing is available through the experiment
+index and is used for this comparison. The regression models remain unclustered; the
+revised assumption statement discloses this and the resulting anti-conservative standard
+errors.
 \item \textbf{Experimental design dimension.} A sentence describing future playback
 experiments stated the wrong design size. Cross-checking against the raw data showed four
 call-type levels (including the control) and thirteen playback distances, and the

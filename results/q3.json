@@ -35,6 +35,24 @@
     "fisher_or_note": "scipy returns the odds of response in the first row (natural call) relative to the second (control); the reciprocal is reported as natural versus control",
     "risk_difference": 0.518
   },
+  "paired_response": {
+    "n_pairs": 139,
+    "concordant_both": 16,
+    "discordant_call_only": 74,
+    "discordant_control_only": 2,
+    "concordant_neither": 47,
+    "balanced_pairs": true,
+    "mcnemar_stat_cc": 66.329,
+    "mcnemar_p_asymptotic": 3.816130163654068e-16,
+    "mcnemar_p_exact": 7.747704489416678e-20,
+    "paired_or": 37.0,
+    "paired_risk_difference": 0.518,
+    "paired_risk_difference_ci95": [
+      0.4303,
+      0.6057
+    ],
+    "note": "McNemar on the matched table; the independent chi-square in overall_response ignores the pairing and is kept only for comparison"
+  },
   "logit_response_all": {
     "tag": "Response ~ Type + Context + log10(Distance) + Npenguins",
     "n": 278,

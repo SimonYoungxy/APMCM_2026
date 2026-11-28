@@ -88,6 +88,35 @@ res["overall_response"] = {
                                    - d.loc[d.Type == "control", "ResponseYesNo"].mean()), 4),
 }
 
+# ------------------------------------------------ 1b. paired analysis (McNemar)
+# every expID contributes exactly one natural-call and one control trial at the
+# same date, context, distance and group size, so the response comparison is a
+# matched 2x2 table and requires a paired test, not an independent chi-square
+pair = d.pivot_table(index="expID", columns="Type", values="ResponseYesNo",
+                     aggfunc="first")
+b = int(((pair["call"] == 1) & (pair["control"] == 0)).sum())   # call only
+c = int(((pair["call"] == 0) & (pair["control"] == 1)).sum())   # control only
+a = int(((pair["call"] == 1) & (pair["control"] == 1)).sum())   # both
+dd = int(((pair["call"] == 0) & (pair["control"] == 0)).sum())  # neither
+n_pairs = a + b + c + dd
+mcn_stat = (abs(b - c) - 1.0) ** 2 / (b + c)
+rd_paired = (b - c) / n_pairs
+se_rd = float(np.sqrt(b + c - (b - c) ** 2 / n_pairs)) / n_pairs
+res["paired_response"] = {
+    "n_pairs": int(n_pairs),
+    "concordant_both": a, "discordant_call_only": b,
+    "discordant_control_only": c, "concordant_neither": dd,
+    "balanced_pairs": bool(pair[["call", "control"]].notna().all(axis=1).all()),
+    "mcnemar_stat_cc": round(float(mcn_stat), 3),
+    "mcnemar_p_asymptotic": float(stats.chi2.sf(mcn_stat, 1)),
+    "mcnemar_p_exact": float(stats.binomtest(b, b + c, 0.5).pvalue),
+    "paired_or": (round(float(b / c), 3) if c > 0 else None),
+    "paired_risk_difference": round(float(rd_paired), 4),
+    "paired_risk_difference_ci95": [round(float(rd_paired - 1.96 * se_rd), 4),
+                                    round(float(rd_paired + 1.96 * se_rd), 4)],
+    "note": ("McNemar on the matched table; the independent chi-square in "
+             "overall_response ignores the pairing and is kept only for comparison")}
+
 # ------------------------------------------------ 2. logistic models
 X1 = pd.get_dummies(d[["Type", "Context", "log_dist", "Npenguins"]],
                     columns=["Type", "Context"], drop_first=True).astype(float)

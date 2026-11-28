@@ -42,7 +42,8 @@ exponential and logistic decay models by AIC gives potential-recognition ranges 
 $156$ and $192$ m for flat, modulated and two-voice calls, with model-form bands of
 $[67,95]$, $[138,206]$ and $[162,438]$ m.
 
-Natural calls raise the response rate from $12.9\%$ to $64.8\%$ (Fisher exact odds ratio $12.3$).
+Natural calls raise the response rate from $12.9\%$ to $64.8\%$ in matched pairs
+(McNemar $p<10^{-15}$, paired odds ratio $37$).
 Response probability falls with distance and weakly with group size, and a multinomial
 analysis shows that natural calls generate multi-behaviour responses which control sounds
 essentially never produce. With non-responses censored at a surrogate window, Cox hazard
@@ -146,9 +147,10 @@ itself defines perfect fidelity; all fidelity values are relative to it.
 foraging habitat, with no additional site-specific absorption term.
 \item A latency is the delay from stimulus onset to the first occurrence of a behaviour; a
 trial without the behaviour is censored, not treated as a failure of perception.
-\item Because individual identities and group clustering are unavailable, playback trials
-are treated as independent as a working approximation; the standard errors may be
-anti-conservative if the same individuals or groups were repeatedly sampled
+\item Individual identities are unavailable, but each trial is one arm of a matched pair
+(index variable expID); the overall response comparison therefore uses McNemar's test on
+the $139$ pairs. The regression models still treat trials as independent, so their
+standard errors may be anti-conservative if animals were resampled
 (Section~\ref{sec:eval}).
 \item The three call types are treated as fixed categories.
 \end{enumerate}
@@ -442,12 +444,12 @@ expected because fine temporal structure is lost before spectral structure.
 \subsection{Overall response rates}
 
 Natural calls elicited a response in $90$ of $139$ trials ($64.8\%$), control sounds in
-$18$ of $139$ ($12.9\%$). The difference is large and unambiguous
-($\chi^2=78.49$, $p=8.0\times10^{-19}$, Cram\'er's $V=0.531$; Fisher exact odds ratio
-$12.3$ in favour of natural calls, $p=1.9\times10^{-19}$; risk difference $0.518$). This is
-the backbone result of
-the question: penguins at sea do respond to conspecific calls, and the response is not a
-general reaction to any underwater sound.
+$18$ of $139$ ($12.9\%$). Each trial is one arm of a matched pair (same date, context,
+distance and group size), so the difference is tested with McNemar's test: $74$ pairs
+responded only to the call and $2$ only to the control ($\chi^2=66.33$,
+$p=3.8\times10^{-16}$; paired odds ratio $37.0$). The independent analysis
+($\chi^2=78.49$, Fisher odds ratio $12.3$) is shown for comparison; both agree that
+penguins at sea do respond to conspecific calls, not to any underwater sound.
 
 \begin{figure}[!ht]
 \centering
